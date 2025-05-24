@@ -7,14 +7,12 @@ const DetailView = ({ place, onBack }) => {
   const [weather2, setWeather2] = useState(null); // 내일 날씨 예보를 위한 상태
   const [detail, setDetail] = useState(null);
 
-  const mapRef = useRef(null);
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
+  const mapRef = useRef(null);
 
   // ✅ Kakao SDK 동적 로드
   useEffect(() => {
-    fetchKakaoMap(() => {
-      setIsSdkLoaded(true);
-    });
+    fetchKakaoMap(() => setIsSdkLoaded(true));
   }, []);
 
   // 관광지의 현재 날씨 정보를 불러옴
@@ -50,7 +48,6 @@ const DetailView = ({ place, onBack }) => {
   useEffect(() => {
     const lat = detail?.mapy;
     const lon = detail?.mapx;
-
     if (isSdkLoaded && lat && lon && mapRef.current) {
       const container = mapRef.current;
       const options = {
@@ -58,13 +55,10 @@ const DetailView = ({ place, onBack }) => {
         level: 2,
       };
       const map = new window.kakao.maps.Map(container, options);
-
       const marker = new window.kakao.maps.Marker({
         position: new window.kakao.maps.LatLng(lat, lon),
       });
       marker.setMap(map);
-
-      console.log("✅ 지도 생성 완료!");
     }
   }, [isSdkLoaded, detail]);
 

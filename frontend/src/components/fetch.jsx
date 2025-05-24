@@ -71,19 +71,19 @@ export const fetchWeather = async (lat, lon, after = 0) => {
 // 카카오맵 지도를 가져오는 함수
 export const fetchKakaoMap = async (onLoadCallback) => {
   try {
-    // 서버리스에서 JavaScript Key 받아오기
+    // 1️⃣ 서버리스에서 JavaScript Key 받아오기
     const response = await axios.get("/api/Kakaomap");
     const jsKey = response.data.key;
 
     if (!jsKey) throw new Error("JavaScript Key를 받아오지 못했습니다.");
 
-    // Kakao Maps SDK 동적 삽입
+    // 2️⃣ Kakao Maps SDK 스크립트 동적 삽입
     const script = document.createElement("script");
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${jsKey}&autoload=false&libraries=services`;
     script.onload = () => {
       window.kakao.maps.load(() => {
         console.log("✅ Kakao Maps SDK 로드 완료");
-        onLoadCallback(); // 콜백으로 지도 띄우기 실행
+        onLoadCallback();
       });
     };
     document.head.appendChild(script);
