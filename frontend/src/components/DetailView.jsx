@@ -5,8 +5,17 @@ import "./DetailView.css"; // 스타일은 따로 분리
 const DetailView = ({ place, onBack }) => {
   const [weather, setWeather] = useState(null); // 현재 날씨 정보를 위한 상태
   const [weather2, setWeather2] = useState(null); // 내일 날씨 예보를 위한 상태
-  const mapRef = useRef(null);
   const [detail, setDetail] = useState(null);
+
+  const mapRef = useRef(null);
+  const [isSdkLoaded, setIsSdkLoaded] = useState(false);
+
+  // ✅ Kakao SDK 동적 로드
+  useEffect(() => {
+    fetchKakaoMap(() => {
+      setIsSdkLoaded(true);
+    });
+  }, []);
 
   // 관광지의 현재 날씨 정보를 불러옴
   useEffect(() => {
@@ -39,10 +48,10 @@ const DetailView = ({ place, onBack }) => {
 
   // 관광지의 지도 정보를 불러옴
   useEffect(() => {
-      const lat = detail?.mapy;
-      const lon = detail?.mapx;
+    const lat = detail?.mapy;
+    const lon = detail?.mapx;
 
-    if (lat && lon && mapRef.current) {
+    if (isSdkLoaded && lat && lon && mapRef.current) {
       const container = mapRef.current;
       const options = {
         center: new window.kakao.maps.LatLng(lat, lon),
@@ -54,8 +63,10 @@ const DetailView = ({ place, onBack }) => {
         position: new window.kakao.maps.LatLng(lat, lon),
       });
       marker.setMap(map);
+
+      console.log("✅ 지도 생성 완료!");
     }
-  }, [detail]);
+  }, [isSdkLoaded, detail]);
 
   // 관광지의 상세 정보를 불러옴
   useEffect(() => {
