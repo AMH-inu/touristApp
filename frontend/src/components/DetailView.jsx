@@ -18,7 +18,7 @@ const DetailView = ({ place, onBack }) => {
     }
     const script = document.createElement("script");
     script.id = "kakao-map-script";
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK_KEY}&autoload=false&libraries=services`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_SDK_KEY}&autoload=false&libraries=services`;
     script.onload = () => {
       window.kakao.maps.load(() => {
         setIsSdkLoaded(true);
