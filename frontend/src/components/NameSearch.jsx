@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SearchResult from "./SearchResult"; // 검색 결과 컴포넌트 import
-import fetchTouristPlaces from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
+import { fetchTouristPlaces } from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
 
 const MAX_SEARCH_HISTORY = 10; // 최대 검색 기록 개수
 const NameSearch = ({ history, setHistory, 

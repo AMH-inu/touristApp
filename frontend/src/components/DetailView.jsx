@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Kakaomap from "../../../api/Kakaomap"; // 카카오맵 로딩 함수
 import {fetchPlaceDetail, fetchWeather, fetchKakaoMap} from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
 import "./DetailView.css"; // 스타일은 따로 분리
 
