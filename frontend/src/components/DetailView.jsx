@@ -45,22 +45,46 @@ const DetailView = ({ place, onBack }) => {
   }, [weather, weather2]);
 
   // 관광지의 지도 정보를 불러옴
-  useEffect(() => {
+    useEffect(() => {
     const lat = detail?.mapy;
     const lon = detail?.mapx;
-    if (isSdkLoaded && lat && lon && mapRef.current) {
-      const container = mapRef.current;
-      const options = {
-        center: new window.kakao.maps.LatLng(lat, lon),
-        level: 2,
-      };
-      const map = new window.kakao.maps.Map(container, options);
-      const marker = new window.kakao.maps.Marker({
-        position: new window.kakao.maps.LatLng(lat, lon),
-      });
-      marker.setMap(map);
+
+    if (!lat || !lon || !mapRef.current) {
+      console.warn("🛑 lat, lon, mapRef가 없습니다.");
+      return;
     }
-  }, [isSdkLoaded, detail]);
+
+    const loadMap = async () => {
+      try {
+        if (!window.kakao || !window.kakao.maps) {
+          console.error("❌ Kakao Maps SDK가 아직 로드되지 않았습니다.");
+          return;
+        }
+
+        const container = mapRef.current;
+        const map = new window.kakao.maps.Map(container, {
+          center: new window.kakao.maps.LatLng(lat, lon),
+          level: 3,
+        });
+
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(lat, lon),
+        });
+        marker.setMap(map);
+
+        const infoWindow = new window.kakao.maps.InfoWindow({
+          content: `<div style="padding:5px;">${address}</div>`,
+        });
+        infoWindow.open(map, marker);
+
+        console.log("✅ 지도와 주소 인포윈도우 생성 완료!");
+      } catch (error) {
+        console.error("❌ 지도 생성 실패:", error.response?.data || error.message);
+      }
+    };
+
+    loadMap();
+  }, [detail]);
 
   // 관광지의 상세 정보를 불러옴
   useEffect(() => {

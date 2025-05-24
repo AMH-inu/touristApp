@@ -69,25 +69,15 @@ export const fetchWeather = async (lat, lon, after = 0) => {
 };
 
 // 카카오맵 지도를 가져오는 함수
-export const fetchKakaoMap = async (onLoadCallback) => {
+export const fetchKakaoMap = async (lat, lon) => {
   try {
-    // 1️⃣ 서버리스에서 JavaScript Key 받아오기
-    const response = await axios.get("/api/Kakaomap");
-    const jsKey = response.data.key;
+    const response = await axios.get("/api/Kakaomap", {
+      params: { lat, lon },
+    });
 
-    if (!jsKey) throw new Error("JavaScript Key를 받아오지 못했습니다.");
-
-    // 2️⃣ Kakao Maps SDK 스크립트 동적 삽입
-    const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${jsKey}&autoload=false&libraries=services`;
-    script.onload = () => {
-      window.kakao.maps.load(() => {
-        console.log("✅ Kakao Maps SDK 로드 완료");
-        onLoadCallback();
-      });
-    };
-    document.head.appendChild(script);
+    return response.data.address || "주소 정보 없음";
   } catch (error) {
-    console.error("❌ Kakao JS SDK 로드 실패:", error.message);
+    console.error("❌ 좌표 → 주소 변환 API 호출 실패:", error.response?.data || error.message);
+    return "주소 정보 없음";
   }
 };
