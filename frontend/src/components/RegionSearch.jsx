@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { regionLists } from "../api/RegionList"; // 지역 목록 호출을 위한 함수 import
-import { areaSearch } from "../api/AreaSearch"; // 지역별 관광지 검색 API 호출 함수 import
 import SearchResult from "./SearchResult"; // 검색 결과 컴포넌트 import
+import {fetchAreaSearch, fetchRegionLists} from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
 
 const RegionSearch = ({ selectedSido, setSelectedSido, 
                         selectedSigungu, setSelectedSigungu, 
@@ -22,7 +21,7 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   useEffect(() => {
   const fetchSidoList = async () => {
     try {
-      const data = await regionLists(); // API에서 시도 목록 받아오기
+      const data = await fetchRegionLists(); // API에서 시도 목록 받아오기
       setSidoList(data); // state에 저장
     } catch (error) {
       console.error("시도 목록 불러오기 실패:", error);
@@ -37,7 +36,7 @@ useEffect(() => {
 
   const fetchSigungu = async () => {
     try {
-      const data = await regionLists(Number(selectedSido)); // ← 문자열을 숫자로 변환
+      const data = await fetchRegionLists(Number(selectedSido)); // ← 문자열을 숫자로 변환
       setSigunguList(data);
     } catch (error) {
       console.error("시군구 불러오기 실패:", error);
@@ -57,7 +56,7 @@ useEffect(() => {
     setHasSearched(true);
 
     try {
-      const data = await areaSearch(selectedSido, selectedSigungu, page);
+      const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
       setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
 
       if (data.totalcount === 0) {

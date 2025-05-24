@@ -18,8 +18,10 @@ RUN npm run build
 
 # nginx로 정적 파일 및 제공
 FROM nginx:alpine
-COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY proxy/nginx.conf /etc/nginx/conf.d/nginx.conf
+COPY --from=0 /app/dist /usr/share/nginx/html
+
+EXPOSE 80
 
 # nginx 실행
 CMD ["nginx", "-g", "daemon off;"]

@@ -56,9 +56,17 @@ function getBaseDateTime() {
   return { base_date: date, base_time };
 }
 
-export const fetchKmaWeather = async (lat, lon, after = 0) => {
-  const SERVICE_KEY = "ehv0qyzF0IBRdYHS5pZHvDXVBMHvTsVmIJw7GIcrNMhsyLKbp+uwEa2drOopqwdig7EUA4KCgGz+r/D0u7iAsw==";
-  const BASE_URL = "/api/1360000/VilageFcstInfoService_2.0/getVilageFcst";
+// Vercel 서버리스 함수
+export default async function handler(req, res) {
+  const { lat, lon, after = 0 } = req.query;
+
+  if (!lat || !lon) {
+    res.status(400).json({ error: "lat/lon이 필요합니다." });
+    return;
+  }
+
+  const SERVICE_KEY = process.env.SERVICE_KEY;
+  const BASE_URL = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   const { nx, ny } = convertToGrid(lat, lon);
   const { base_date, base_time } = getBaseDateTime();
@@ -76,13 +84,11 @@ export const fetchKmaWeather = async (lat, lon, after = 0) => {
 
   try {
     const response = await axios.get(BASE_URL, { params });
-    console.log(response);
     const items = response?.data?.response?.body?.items?.item;
-    console.log(items);
+
     if (!items) throw new Error("기상청 응답 오류 또는 데이터 없음");
 
     const weather = { TMP: "정보 없음", REH: "정보 없음", RN1: "0" };
-
     ["TMP", "REH", "RN1"].forEach((code) => {
       const candidates = items
         .filter((it) => it.category === code)
@@ -96,27 +102,25 @@ export const fetchKmaWeather = async (lat, lon, after = 0) => {
         `${String(now.getFullYear()).padStart(4, "0")}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`
       );
 
-      console.log("currentHHMM", currentHHMM);
-      console.log("currentYYYYMMDD", currentYYYYMMDD);    
       let selected = {};
 
-        if (after == 0) { 
-            selected = candidates.find((it) => parseInt(it.fcstTime) >= currentHHMM) || candidates[0]; 
-            console.log('A');
-        } else { 
-            selected = candidates.find((it) => parseInt(it.fcstDate) >= currentYYYYMMDD + after) || candidates[0]; 
-            console.log('B');
-        }
+      if (after == 0) {
+        selected = candidates.find((it) => parseInt(it.fcstTime) >= currentHHMM) || candidates[0];
+      } else {
+        selected = candidates.find((it) => parseInt(it.fcstDate) >= currentYYYYMMDD + parseInt(after)) || candidates[0];
+      }
 
-        if (selected && selected.fcstValue !== "강수없음") {
-            weather[code] = selected.fcstValue;
-        }
+      if (selected && selected.fcstValue !== "강수없음") {
+        weather[code] = selected.fcstValue;
+      }
     });
 
-    console.log("API 호출 결과 :", weather);
-    return weather;
+    res.status(200).json(weather);
   } catch (error) {
-    console.error("❌ 기상청 날씨 데이터 요청 실패:", error);
-    return { TMP: "정보 없음", REH: "정보 없음", RN1: "0" };
+    console.error("❌ 기상청 날씨 데이터 요청 실패:", error.response?.data || error.message);
+    res.status(500).json({
+      error: "기상청 날씨 API 요청 실패",
+      detail: error.response?.data || error.message,
+    });
   }
-};
+}

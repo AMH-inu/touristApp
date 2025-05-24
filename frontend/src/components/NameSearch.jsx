@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { searchTouristPlaces } from "../api/NameSearch"; // API 호출을 위한 함수 import
 import SearchResult from "./SearchResult"; // 검색 결과 컴포넌트 import
+import fetchTouristPlaces from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
 
 const MAX_SEARCH_HISTORY = 10; // 최대 검색 기록 개수
 const NameSearch = ({ history, setHistory, 
@@ -48,7 +48,7 @@ const NameSearch = ({ history, setHistory,
     setLoading(true);
 
     try {
-      const data = await searchTouristPlaces(historyParam, page); // API 호출하여 검색 결과 가져오기
+      const data = await fetchTouristPlaces(historyParam, page); // API 호출하여 검색 결과 가져오기
       setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
 
       if (data.totalCount === 0) {

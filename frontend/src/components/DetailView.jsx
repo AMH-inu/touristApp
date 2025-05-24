@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import Kakaomap from "../api/Kakaomap"; // 카카오맵 로딩 함수
-import { fetchKmaWeather } from "../api/Weather"; // 기상청 날씨 API 호출 함수
-import { getPlaceDetail } from "../api/DetailInfo"; // 관광지 상세 정보 API 호출 함수
+import Kakaomap from "../../../api/Kakaomap"; // 카카오맵 로딩 함수
+import {fetchPlaceDetail, fetchWeather} from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
 import "./DetailView.css"; // 스타일은 따로 분리
 
 const DetailView = ({ place, onBack }) => {
@@ -14,7 +13,7 @@ const DetailView = ({ place, onBack }) => {
   useEffect(() => {
     if (detail?.mapy && detail?.mapx) {
     const getWeather = async () => {
-      const data = await fetchKmaWeather(detail.mapy, detail.mapx);
+      const data = await fetchWeather(detail.mapy, detail.mapx);
       setWeather(data);
     };
 
@@ -26,7 +25,7 @@ const DetailView = ({ place, onBack }) => {
   useEffect(() => {
     if (detail?.mapy && detail?.mapx) {
     const getTomorrowWeather = async () => {
-      const data = await fetchKmaWeather(detail.mapy, detail.mapx, 1);
+      const data = await fetchWeather(detail.mapy, detail.mapx, 1);
       setWeather2(data);     
     };
 
@@ -52,7 +51,7 @@ const DetailView = ({ place, onBack }) => {
   useEffect(() => {
     if (place?.contentid) {
       const fetchDetail = async () => {
-        const result = await getPlaceDetail(place.contentid);
+        const result = await fetchPlaceDetail(place.contentid);
         if (result) {
           setDetail(result);
         } else {
