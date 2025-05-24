@@ -2,9 +2,6 @@ import axios from "axios"; // axios를 사용하여 API 호출하기 위한 라�
 
 export default async function handler(req, res) {
   const { areaCode } = req.query;
-  if (!areaCode) {
-    return res.status(400).json({ error: "areaCode is required!" });
-  }
 
   const BASE_URL = "https://apis.data.go.kr/B551011/KorService2/areaCode2";
   const SERVICE_KEY = process.env.SERVICE_KEY;
@@ -21,8 +18,11 @@ export default async function handler(req, res) {
     MobileApp: "TouristApp",
     _type: "json",
     ServiceKey: SERVICE_KEY,
-    areaCode,
   };
+
+  if (areaCode) {
+    params.areaCode = areaCode;
+  }
 
   const tryFetch = async () => {
     const response = await axios.get(BASE_URL, { params });
