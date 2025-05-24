@@ -1,5 +1,3 @@
-import axios from "axios";
-
 function convertToGrid(lat, lon) {
   const RE = 6371.00877;
   const GRID = 5.0;
@@ -71,7 +69,7 @@ export default async function handler(req, res) {
   const { nx, ny } = convertToGrid(lat, lon);
   const { base_date, base_time } = getBaseDateTime();
 
-  const params = {
+  const params = new URLSearchParams({
     ServiceKey: SERVICE_KEY,
     pageNo: "1",
     numOfRows: "1000",
@@ -80,15 +78,19 @@ export default async function handler(req, res) {
     base_time,
     nx,
     ny,
-  };
+  });
 
   try {
-    const response = await axios.get(BASE_URL, { params });
-    const items = response?.data?.response?.body?.items?.item;
+    const response = await fetch(`${BASE_URL}?${params}`);
+    if (!response.ok) throw new Error(`API 요청 실패: ${response.status}`);
+
+    const data = await response.json();
+    const items = data?.response?.body?.items?.item;
 
     if (!items) throw new Error("기상청 응답 오류 또는 데이터 없음");
 
     const weather = { TMP: "정보 없음", REH: "정보 없음", RN1: "0" };
+
     ["TMP", "REH", "RN1"].forEach((code) => {
       const candidates = items
         .filter((it) => it.category === code)
@@ -117,10 +119,10 @@ export default async function handler(req, res) {
 
     res.status(200).json(weather);
   } catch (error) {
-    console.error("❌ 기상청 날씨 데이터 요청 실패:", error.response?.data || error.message);
+    console.error("❌ 기상청 날씨 데이터 요청 실패:", error.message);
     res.status(500).json({
       error: "기상청 날씨 API 요청 실패",
-      detail: error.response?.data || error.message,
+      detail: error.message,
     });
   }
 }
