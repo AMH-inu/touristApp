@@ -20,6 +20,7 @@ export default async function handler(req, res) {
     ServiceKey: SERVICE_KEY,
   };
 
+  // ✅ areaCode가 있으면 추가, 없으면 areaCode 없이 요청
   if (areaCode) {
     params.areaCode = areaCode;
   }
