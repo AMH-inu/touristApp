@@ -26,9 +26,7 @@ export default async function handler(req, res) {
     const totalCount = data?.response?.body?.totalCount;
     const items = data?.response?.body?.items?.item || [];
 
-    items.totalCount = totalCount;
-
-    return items;
+    return {items, totalCount};
   };
 
   try {

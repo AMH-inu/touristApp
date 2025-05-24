@@ -58,7 +58,6 @@ useEffect(() => {
     try {
       const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
       setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
-      console.log("Area", data);
 
       if (data.totalcount === 0) {
         alert("검색 결과가 없습니다.");
