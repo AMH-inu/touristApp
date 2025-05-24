@@ -66,6 +66,8 @@ const DetailView = ({ place, onBack }) => {
     const lat = detail?.mapy;
     const lon = detail?.mapx;
 
+    console.log("lat:", lat, "lon:", lon, "mapRef:", mapRef.current, "isSdkLoaded:", isSdkLoaded);
+
     if (!lat || !lon || !mapRef.current || !isSdkLoaded) {
       console.warn("🛑 lat, lon, mapRef, isSdkLoaded가 없습니다. 지도 중단!");
       return;
