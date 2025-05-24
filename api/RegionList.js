@@ -5,12 +5,6 @@ export default async function handler(req, res) {
 
   const BASE_URL = "https://apis.data.go.kr/B551011/KorService2/areaCode2";
   const SERVICE_KEY = process.env.SERVICE_KEY;
-  
-  return res.status(200).json({
-    message: "디버깅용 응답",
-    areaCode,
-    SERVICE_KEY,
-  });
 
   if (!SERVICE_KEY) {
     console.error("❌ SERVICE_KEY 환경변수가 누락되었습니다!");
