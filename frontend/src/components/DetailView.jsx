@@ -41,7 +41,7 @@ const DetailView = ({ place, onBack }) => {
   useEffect(() => {
       const lat = detail?.mapy;
       const lon = detail?.mapx;
-      
+
     if (isSdkLoaded && lat && lon && mapRef.current) {
       const container = mapRef.current;
       const options = {
@@ -55,7 +55,7 @@ const DetailView = ({ place, onBack }) => {
       });
       marker.setMap(map);
     }
-  }, [lat, lon]);
+  }, [detail]);
 
   // 관광지의 상세 정보를 불러옴
   useEffect(() => {
