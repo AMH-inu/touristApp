@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {fetchPlaceDetail, fetchWeather, fetchKakaoMap} from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
+import {fetchPlaceDetail, fetchWeather, fetchKakaoMap, displayMap} from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
 import "./DetailView.css"; // 스타일은 따로 분리
 
 const DetailView = ({ place, onBack }) => {
@@ -45,7 +45,7 @@ const DetailView = ({ place, onBack }) => {
   }, [weather, weather2]);
 
   // 관광지의 지도 정보를 불러옴
-    useEffect(() => {
+  useEffect(() => {
     const lat = detail?.mapy;
     const lon = detail?.mapx;
 
@@ -54,36 +54,16 @@ const DetailView = ({ place, onBack }) => {
       return;
     }
 
-    const loadMap = async () => {
+    const loadMapWithAddress = async () => {
       try {
-        if (!window.kakao || !window.kakao.maps) {
-          console.error("❌ Kakao Maps SDK가 아직 로드되지 않았습니다.");
-          return;
-        }
-
-        const container = mapRef.current;
-        const map = new window.kakao.maps.Map(container, {
-          center: new window.kakao.maps.LatLng(lat, lon),
-          level: 3,
-        });
-
-        const marker = new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(lat, lon),
-        });
-        marker.setMap(map);
-
-        const infoWindow = new window.kakao.maps.InfoWindow({
-          content: `<div style="padding:5px;">${address}</div>`,
-        });
-        infoWindow.open(map, marker);
-
-        console.log("✅ 지도와 주소 인포윈도우 생성 완료!");
+        const address = await fetchAddressFromCoords(lat, lon);
+        displayMapWithAddress(mapRef.current, lat, lon, address);
       } catch (error) {
-        console.error("❌ 지도 생성 실패:", error.response?.data || error.message);
+        console.error("❌ 지도/주소 처리 실패:", error.response?.data || error.message);
       }
     };
 
-    loadMap();
+    loadMapWithAddress();
   }, [detail]);
 
   // 관광지의 상세 정보를 불러옴
