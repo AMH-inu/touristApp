@@ -6,8 +6,7 @@ export default async function handler(req, res) {
   const { keyword = "", pageNo = 1 } = req.query;
 
   const BASE_URL = "https://apis.data.go.kr/B551011/KorService2/searchKeyword2";
-  const SERVICE_KEY = "W6r4Wyzx6d3Kr7iLcwIOYqVzAQ31Jp2ki1WMh96sFEJ5QGEktd2FezH/T4i81B8mMibZZQgKuvoWp1hOD+09Sg=="; // API 호출에 필요한 키
-  // const SERVICE_KEY = process.env.SERVICE_KEY; Vercel 업로드 후 수정
+  const SERVICE_KEY = process.env.SERVICE_KEY;
 
   const params = {
     numOfRows: 30,

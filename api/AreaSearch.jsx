@@ -5,8 +5,7 @@ export default async function handler(req, res) {
   const { areaCode = "", sigunguCode = "", pageNo = 1 } = req.query;
 
   const BASE_URL = "https://apis.data.go.kr/B551011/KorService2/areaBasedList2";
-  const SERVICE_KEY = "ehv0qyzF0IBRdYHS5pZHvDXVBMHvTsVmIJw7GIcrNMhsyLKbp+uwEa2drOopqwdig7EUA4KCgGz+r/D0u7iAsw==";
-  // Vercel 업로드 후 수정 : const SERVICE_KEY = process.env.SERVICE_KEY;
+  const SERVICE_KEY = process.env.SERVICE_KEY;
 
   const params = {
     numOfRows: 30,
