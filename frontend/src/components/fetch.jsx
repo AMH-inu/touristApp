@@ -68,15 +68,25 @@ export const fetchWeather = async (lat, lon, after = 0) => {
   }
 };
 
-// 관광지의 주소 기반 지도를 가져오는 함수
-export const fetchKakaoMap = async (lat, lon) => {
-  try {
-    const response = await axios.get("/api/Kakaomap", {
-      params: { lat, lon },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("❌ 카카오 좌표 → 주소 API 호출 실패:", error.response?.data || error.message);
-    return null;
-  }
-};
+// 카카오맵 지도를 가져오는 함수
+export const fetchKakaoMap = async () => {
+      try {
+        // 서버리스에서 JavaScript Key 받아오기
+        const response = await axios.get("/api/Kakaomap");
+        const jsKey = response.data.key;
+
+        if (!jsKey) throw new Error("JavaScript Key를 받아오지 못했습니다.");
+
+        // Kakao Maps SDK 스크립트 동적 삽입
+        const script = document.createElement("script");
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${jsKey}&autoload=false&libraries=services`;
+        script.onload = () => {
+          window.kakao.maps.load(() => {
+            setIsSdkLoaded(true);
+          });
+        };
+        document.head.appendChild(script);
+      } catch (error) {
+        console.error("❌ Kakao JS SDK 로드 실패:", error.message);
+      }
+    };

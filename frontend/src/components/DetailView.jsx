@@ -39,35 +39,20 @@ const DetailView = ({ place, onBack }) => {
 
   // 관광지의 지도 정보를 불러옴
   useEffect(() => {
-  if (place && mapRef.current) {
-    const lat = place.mapy;
-    const lon = place.mapx;
-
-    fetchKakaoMap(lat, lon);
-
-    const kakao = window.kakao;
+    if (isSdkLoaded && lat && lon && mapRef.current) {
       const container = mapRef.current;
       const options = {
-        center: new kakao.maps.LatLng(lat, lon),
+        center: new window.kakao.maps.LatLng(lat, lon),
         level: 2,
       };
-      const map = new kakao.maps.Map(container, options);
+      const map = new window.kakao.maps.Map(container, options);
 
-      const markerPosition = new kakao.maps.LatLng(lat, lon);
-      const marker = new kakao.maps.Marker({
-        position: markerPosition,
+      const marker = new window.kakao.maps.Marker({
+        position: new window.kakao.maps.LatLng(lat, lon),
       });
       marker.setMap(map);
-
-      const address = data?.documents?.[0]?.address?.address_name || "주소 정보 없음";
-      const infoWindow = new kakao.maps.InfoWindow({
-        content: `<div style="padding:5px; font-size:14px;">${address}</div>`,
-      });
-      infoWindow.open(map, marker);
-  } else {
-    console.warn("🛑 지도 생성 불가 - place 또는 mapRef가 없습니다.");
-  }
-  }, [place]);
+    }
+  }, [lat, lon]);
 
   // 관광지의 상세 정보를 불러옴
   useEffect(() => {
