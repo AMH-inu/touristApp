@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
   // 요청 및 재시도 로직
   const tryFetch = async () => {
-    const response = await axios.get(BASE_URL, { params });
+    const response = await axios.get(BASE_URL, { params, headers: { "User-Agent": "Mozilla/5.0" } });
     const totalCount = response?.data?.response?.body?.totalCount;
     // items가 없는 경우 방어코드
     const items = response?.data?.response?.body?.items?.item || [];

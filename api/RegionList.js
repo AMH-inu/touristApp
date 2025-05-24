@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   }
 
   const tryFetch = async () => {
-    const response = await axios.get(BASE_URL, { params });
+    const response = await axios.get(BASE_URL, { params, headers: { "User-Agent": "Mozilla/5.0" } });
     return response.data?.response?.body?.items?.item || [];
   };
 

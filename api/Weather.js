@@ -83,7 +83,7 @@ export default async function handler(req, res) {
   };
 
   try {
-    const response = await axios.get(BASE_URL, { params });
+    const response = await axios.get(BASE_URL, { params, headers: { "User-Agent": "Mozilla/5.0" } });
     const items = response?.data?.response?.body?.items?.item;
 
     if (!items) throw new Error("기상청 응답 오류 또는 데이터 없음");
