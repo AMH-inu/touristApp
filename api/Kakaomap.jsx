@@ -1,47 +1,32 @@
-const Kakaomap = ({ lat, lng, container }) => {
-  const appKey = import.meta.env.VITE_KAKAO_MAP_KEY;
+import axios from "axios";
 
-  const createMap = () => {
+export default async function handler(req, res) {
+  const { lat, lon } = req.query;
 
-    if (!container) {
-      console.warn("🛑 지도 container가 null입니다.");
-      return;
-    }
-
-    const center = new window.kakao.maps.LatLng(lat, lng);
-    const map = new window.kakao.maps.Map(container, {
-      center,
-      level : 2,
-    });
-    new window.kakao.maps.Marker({
-      map,
-      position: center,
-    });
-  };
-
-  // window.kakao.maps 가 생길 때까지 기다리는 안전 로딩
-  const waitForKakaoMaps = () => {
-    if (window.kakao && window.kakao.maps) {
-      window.kakao.maps.load(createMap);
-    } else {
-      setTimeout(waitForKakaoMaps, 100);
-    }
-  };
-
-  const existingScript = document.querySelector("#kakao-map-script");
-
-  if (!existingScript) {
-    const script = document.createElement("script");
-    script.id = "kakao-map-script";
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${appKey}&autoload=false`;
-    script.async = true;
-    script.onload = () => {
-      waitForKakaoMaps();
-    };
-    document.head.appendChild(script);
-  } else {
-    waitForKakaoMaps();
+  if (!lat || !lon) {
+    res.status(400).json({ error: "위도(lat)와 경도(lon)가 필요합니다." });
+    return;
   }
-};
 
-export default Kakaomap;
+  const KAKAO_REST_API_KEY = process.env.KAKAO_REST_API_KEY;
+
+  try {
+    const response = await axios.get(
+      "https://dapi.kakao.com/v2/local/geo/coord2address.json",
+      {
+        params: { x: lon, y: lat }, // 카카오는 x: 경도, y: 위도 순서!
+        headers: {
+          Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
+        },
+      }
+    );
+
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error("❌ 카카오 좌표 → 주소 API 요청 실패:", error.response?.data || error.message);
+    res.status(500).json({
+      error: "카카오 API 요청 실패",
+      detail: error.response?.data || error.message,
+    });
+  }
+}

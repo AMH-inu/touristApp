@@ -66,6 +66,7 @@ export default async function handler(req, res) {
   }
 
   const SERVICE_KEY = process.env.SERVICE_KEY;
+  // const SERVICE_KEY = process.env.SERVICE_KEY; // Vercel 업로드 후 수정
   const BASE_URL = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   const { nx, ny } = convertToGrid(lat, lon);

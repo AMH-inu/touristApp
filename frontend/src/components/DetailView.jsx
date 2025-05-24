@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Kakaomap from "../../../api/Kakaomap"; // 카카오맵 로딩 함수
-import {fetchPlaceDetail, fetchWeather} from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
+import {fetchPlaceDetail, fetchWeather, fetchKakaoMap} from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
 import "./DetailView.css"; // 스타일은 따로 분리
 
 const DetailView = ({ place, onBack }) => {
@@ -41,7 +41,7 @@ const DetailView = ({ place, onBack }) => {
   // 관광지의 지도 정보를 불러옴
   useEffect(() => {
   if (place && mapRef.current) {
-    Kakaomap({lat: place.mapy, lng: place.mapx, container: mapRef.current,});
+    fetchKakaoMap({lat: place.mapy, lng: place.mapx, container: mapRef.current,});
   } else {
     console.warn("🛑 지도 생성 불가 - place 또는 mapRef가 없습니다.");
   }
