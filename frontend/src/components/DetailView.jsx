@@ -42,7 +42,7 @@ const DetailView = ({ place, onBack }) => {
       const lat = detail?.mapy;
       const lon = detail?.mapx;
 
-    if (isSdkLoaded && lat && lon && mapRef.current) {
+    if (lat && lon && mapRef.current) {
       const container = mapRef.current;
       const options = {
         center: new window.kakao.maps.LatLng(lat, lon),
