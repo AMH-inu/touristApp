@@ -16,9 +16,10 @@ COPY frontend/ ./
 # 빌드
 RUN npm run build
 
-# nginx로 정적 파일 제공
+# nginx로 정적 파일 및 제공
 FROM nginx:alpine
-COPY --from=0 /app/dist /usr/share/nginx/html
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY proxy/nginx.conf /etc/nginx/conf.d/nginx.conf
 
 # nginx 실행
 CMD ["nginx", "-g", "daemon off;"]
