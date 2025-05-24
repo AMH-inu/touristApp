@@ -117,6 +117,14 @@ export default async function handler(req, res) {
       }
     });
 
+      let i = 0;
+      while (i < 4 && (weather.TMP === "정보 없음" || weather.REH === "정보 없음" || weather.RN1 === "0")) {
+      console.log("❗ 결과를 다시 불러옵니다.", i + 1);
+      await new Promise((r) => setTimeout(r, 300));
+      results = await fetch(`${BASE_URL}?${params}`);
+      i++;
+    }
+
     res.status(200).json(weather);
   } catch (error) {
     console.error("❌ 기상청 날씨 데이터 요청 실패:", error.message);

@@ -40,11 +40,14 @@ const DetailView = ({ place, onBack }) => {
   // 관광지의 지도 정보를 불러옴
   useEffect(() => {
   if (place && mapRef.current) {
-    fetchKakaoMap({lat: place.mapy, lng: place.mapx, container: mapRef.current,});
+    const lat = place.mapy;
+    const lon = place.mapx;
+
+    fetchKakaoMap(lat, lon);
   } else {
     console.warn("🛑 지도 생성 불가 - place 또는 mapRef가 없습니다.");
   }
-}, [place]);
+  }, [place]);
 
   // 관광지의 상세 정보를 불러옴
   useEffect(() => {
