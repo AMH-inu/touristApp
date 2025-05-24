@@ -56,8 +56,8 @@ const DetailView = ({ place, onBack }) => {
 
     const loadMapWithAddress = async () => {
       try {
-        const address = await fetchAddressFromCoords(lat, lon);
-        displayMapWithAddress(mapRef.current, lat, lon, address);
+        const address = await fetchKakaoMap(lat, lon);
+        displayMap(mapRef.current, lat, lon, address);
       } catch (error) {
         console.error("❌ 지도/주소 처리 실패:", error.response?.data || error.message);
       }

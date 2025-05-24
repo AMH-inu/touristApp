@@ -68,7 +68,7 @@ export const fetchWeather = async (lat, lon, after = 0) => {
   }
 };
 
-// 카카오맵 지도를 가져오는 함수
+// 좌표에 해당하는 주소를 가져오는 함수
 export const fetchKakaoMap = async (lat, lon) => {
   try {
     const response = await axios.get("/api/Kakaomap", {
@@ -80,4 +80,29 @@ export const fetchKakaoMap = async (lat, lon) => {
     console.error("❌ 좌표 → 주소 변환 API 호출 실패:", error.response?.data || error.message);
     return "주소 정보 없음";
   }
+};
+
+// 주소 기반 카카오맵을 표시하는 함수
+export const displayMap = (container, lat, lon, address) => {
+  if (!window.kakao || !window.kakao.maps) {
+    console.error("❌ Kakao Maps SDK가 로드되지 않았습니다.");
+    return;
+  }
+
+  const map = new window.kakao.maps.Map(container, {
+    center: new window.kakao.maps.LatLng(lat, lon),
+    level: 3,
+  });
+
+  const marker = new window.kakao.maps.Marker({
+    position: new window.kakao.maps.LatLng(lat, lon),
+  });
+  marker.setMap(map);
+
+  const infoWindow = new window.kakao.maps.InfoWindow({
+    content: `<div style="padding:5px;">${address}</div>`,
+  });
+  infoWindow.open(map, marker);
+
+  console.log("✅ 지도와 주소 인포윈도우 생성 완료!");
 };
