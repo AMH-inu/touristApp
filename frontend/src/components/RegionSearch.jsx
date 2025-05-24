@@ -62,7 +62,7 @@ useEffect(() => {
       if (data.totalcount === 0) {
         alert("검색 결과가 없습니다.");
       } else {
-        setResults(data);
+        setResults(data.items);
       }
     } catch (error) {
       console.error("❌ 검색 중 오류:", error);
