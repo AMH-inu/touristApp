@@ -22,6 +22,7 @@ export default async function handler(req, res) {
     const response = await fetch(`${BASE_URL}?${params}`);
     if (!response.ok) throw new Error(`API 요청 실패: ${response.status}`);
     const data = await response.json();
+    console.log("areaSearch", data);
 
     const totalCount = data?.response?.body?.totalCount;
     const items = data?.response?.body?.items?.item || [];
@@ -29,7 +30,6 @@ export default async function handler(req, res) {
     if (Array.isArray(items)) {
       items.totalCount = totalCount;
     }
-    console.log("area", items);
     return items;
   };
 

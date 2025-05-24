@@ -84,10 +84,11 @@ export const fetchKakaoMap = async (lat, lon) => {
 
 // 주소 기반 카카오맵을 표시하는 함수
 export const displayMap = (container, lat, lon, address) => {
+  console.log(window);
   if (!window.kakao || !window.kakao.maps) {
     console.error("❌ Kakao Maps SDK가 로드되지 않았습니다.");
     return;
-  }
+  } 
 
   const map = new window.kakao.maps.Map(container, {
     center: new window.kakao.maps.LatLng(lat, lon),
