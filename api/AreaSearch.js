@@ -30,6 +30,8 @@ export default async function handler(req, res) {
     if (Array.isArray(items)) {
       items.totalCount = totalCount;
     }
+    console.log("totalCount:", items.totalCount);
+    console.log("items:", items);
     return items;
   };
 

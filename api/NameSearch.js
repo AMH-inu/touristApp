@@ -29,7 +29,8 @@ export default async function handler(req, res) {
     if (Array.isArray(items)) {
       items.totalCount = totalCount; // totalCount를 items에 추가
     }
-    console.log("name", items);
+    console.log("totalCount:", items.totalCount);
+    console.log("items:", items);
     return items;
   };
 
