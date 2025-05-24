@@ -16,12 +16,10 @@ export const fetchAreaSearch = async (areaCode, sigunguCode, pageNo = 1) => {
 // 관광지 이름을 기반으로 검색하는 함수
 export const fetchTouristPlaces = async (keyword, pageNo = 1) => {
   try {
-    // 프론트에서 서버리스 API를 호출
     const response = await axios.get("/api/NameSearch", {
       params: { keyword, pageNo },
     });
 
-    // 서버리스 함수에서 반환된 데이터 (배열)
     return response.data;
   } catch (error) {
     console.error("❌ 서버리스 API 호출 실패:", error.response?.data || error.message);
@@ -32,12 +30,10 @@ export const fetchTouristPlaces = async (keyword, pageNo = 1) => {
 // 지역 목록을 가져오는 함수
 export const fetchRegionLists = async (areaCode = "") => {
   try {
-    // 프론트에서 서버리스 API를 호출
     const response = await axios.get("/api/RegionList", {
       params: { areaCode },
     });
 
-    // 서버리스 함수에서 반환된 데이터 (배열)
     return response.data;
   } catch (error) {
     console.error("❌ 서버리스 API 호출 실패:", error.response?.data || error.message);
@@ -52,7 +48,6 @@ export const fetchPlaceDetail = async (contentId) => {
       params: { contentId },
     });
 
-    // 서버리스 함수에서 반환된 데이터
     return response.data;
   } catch (error) {
     console.error("❌ 관광지 상세 정보 API 호출 실패:", error.response?.data || error.message);
