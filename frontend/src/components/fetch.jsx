@@ -74,7 +74,7 @@ export const fetchKakaoMap = async (lat, lon) => {
     const response = await axios.get("/api/Kakaomap", {
       params: { lat, lon },
     });
-
+    console.log(response.data.address);
     return response.data.address || "주소 정보 없음";
   } catch (error) {
     console.error("❌ 좌표 → 주소 변환 API 호출 실패:", error.response?.data || error.message);

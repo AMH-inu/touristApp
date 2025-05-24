@@ -50,7 +50,7 @@ const NameSearch = ({ history, setHistory,
     try {
       const data = await fetchTouristPlaces(historyParam, page); // API 호출하여 검색 결과 가져오기
       setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
-      console.log(totalPages);
+      console.log(data.totalCount);
 
       if (data.totalCount === 0) {
         alert("검색 결과가 없습니다.");
