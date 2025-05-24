@@ -39,6 +39,9 @@ const DetailView = ({ place, onBack }) => {
 
   // 관광지의 지도 정보를 불러옴
   useEffect(() => {
+      const lat = detail?.mapy;
+      const lon = detail?.mapx;
+      
     if (isSdkLoaded && lat && lon && mapRef.current) {
       const container = mapRef.current;
       const options = {
