@@ -20,7 +20,6 @@ RUN npm run build
 FROM nginx:alpine
 COPY proxy/nginx.conf /etc/nginx/conf.d/nginx.conf
 COPY --from=0 /app/dist /usr/share/nginx/html
-
 EXPOSE 80
 
 # nginx 실행
