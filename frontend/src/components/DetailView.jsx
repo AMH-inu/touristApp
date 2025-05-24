@@ -44,6 +44,26 @@ const DetailView = ({ place, onBack }) => {
     const lon = place.mapx;
 
     fetchKakaoMap(lat, lon);
+
+    const kakao = window.kakao;
+      const container = mapRef.current;
+      const options = {
+        center: new kakao.maps.LatLng(lat, lon),
+        level: 2,
+      };
+      const map = new kakao.maps.Map(container, options);
+
+      const markerPosition = new kakao.maps.LatLng(lat, lon);
+      const marker = new kakao.maps.Marker({
+        position: markerPosition,
+      });
+      marker.setMap(map);
+
+      const address = data?.documents?.[0]?.address?.address_name || "주소 정보 없음";
+      const infoWindow = new kakao.maps.InfoWindow({
+        content: `<div style="padding:5px; font-size:14px;">${address}</div>`,
+      });
+      infoWindow.open(map, marker);
   } else {
     console.warn("🛑 지도 생성 불가 - place 또는 mapRef가 없습니다.");
   }
