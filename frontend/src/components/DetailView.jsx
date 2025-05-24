@@ -10,9 +10,26 @@ const DetailView = ({ place, onBack }) => {
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
   const mapRef = useRef(null);
 
-  // ✅ Kakao SDK 동적 로드
+  // ✅ Kakao Maps SDK 동적 로드 (별도의 함수로!)
+  const loadKakaoSdk = () => {
+    if (document.getElementById("kakao-map-script")) {
+      setIsSdkLoaded(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = "kakao-map-script";
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK_KEY}&autoload=false&libraries=services`;
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        setIsSdkLoaded(true);
+      });
+    };
+    document.head.appendChild(script);
+  };
+
+    // ✅ SDK 로드
   useEffect(() => {
-    fetchKakaoMap(() => setIsSdkLoaded(true));
+    loadKakaoSdk();
   }, []);
 
   // 관광지의 현재 날씨 정보를 불러옴
@@ -45,12 +62,12 @@ const DetailView = ({ place, onBack }) => {
   }, [weather, weather2]);
 
   // 관광지의 지도 정보를 불러옴
-  useEffect(() => {
+   useEffect(() => {
     const lat = detail?.mapy;
     const lon = detail?.mapx;
 
-    if (!lat || !lon || !mapRef.current) {
-      console.warn("🛑 lat, lon, mapRef가 없습니다.");
+    if (!lat || !lon || !mapRef.current || !isSdkLoaded) {
+      console.warn("🛑 lat, lon, mapRef, isSdkLoaded가 없습니다. 지도 중단!");
       return;
     }
 
@@ -64,7 +81,7 @@ const DetailView = ({ place, onBack }) => {
     };
 
     loadMapWithAddress();
-  }, [detail]);
+  }, [detail, isSdkLoaded]);
 
   // 관광지의 상세 정보를 불러옴
   useEffect(() => {
