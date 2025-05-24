@@ -68,42 +68,26 @@ export const fetchWeather = async (lat, lon, after = 0) => {
   }
 };
 
-// 좌표에 해당하는 주소를 가져오는 함수
-export const fetchKakaoMap = async (lat, lon) => {
+// 카카오맵 지도를 가져오는 함수
+export const fetchKakaoMap = async (onLoadCallback) => {
   try {
-    const response = await axios.get("/api/Kakaomap", {
-      params: { lat, lon },
-    });
-    console.log(response.data.address);
-    return response.data.address || "주소 정보 없음";
+    // 서버리스에서 JavaScript Key 받아오기
+    const response = await axios.get("/api/Kakaomap");
+    const jsKey = response.data.key;
+
+    if (!jsKey) throw new Error("JavaScript Key를 받아오지 못했습니다.");
+
+    // Kakao Maps SDK 스크립트 동적 삽입
+    const script = document.createElement("script");
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${jsKey}&autoload=false&libraries=services`;
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        console.log("✅ Kakao Maps SDK 로드 완료");
+        onLoadCallback();
+      });
+    };
+    document.head.appendChild(script);
   } catch (error) {
-    console.error("❌ 좌표 → 주소 변환 API 호출 실패:", error.response?.data || error.message);
-    return "주소 정보 없음";
+    console.error("❌ Kakao JS SDK 로드 실패:", error.message);
   }
-};
-
-// 주소 기반 카카오맵을 표시하는 함수
-export const displayMap = (container, lat, lon, address) => {
-  console.log(window);
-  if (!window.kakao || !window.kakao.maps) {
-    console.error("❌ Kakao Maps SDK가 로드되지 않았습니다.");
-    return;
-  } 
-
-  const map = new window.kakao.maps.Map(container, {
-    center: new window.kakao.maps.LatLng(lat, lon),
-    level: 3,
-  });
-
-  const marker = new window.kakao.maps.Marker({
-    position: new window.kakao.maps.LatLng(lat, lon),
-  });
-  marker.setMap(map);
-
-  const infoWindow = new window.kakao.maps.InfoWindow({
-    content: `<div style="padding:5px;">${address}</div>`,
-  });
-  infoWindow.open(map, marker);
-
-  console.log("✅ 지도와 주소 인포윈도우 생성 완료!");
 };

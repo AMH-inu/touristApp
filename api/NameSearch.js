@@ -26,11 +26,8 @@ export default async function handler(req, res) {
     const totalCount = data?.response?.body?.totalCount;
     const items = data?.response?.body?.items?.item || [];
 
-    if (Array.isArray(items)) {
-      items.totalCount = totalCount; // totalCount를 items에 추가
-    }
+    items.totalCount = totalCount;
 
-    console.log(items);
     return items;
   };
 
