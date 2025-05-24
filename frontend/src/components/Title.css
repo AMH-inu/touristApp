@@ -1,0 +1,57 @@
+.Title {
+  background-color: #5aaeea;
+  padding: 8px 6px;
+  text-align: center;
+  margin-bottom: 16px;
+  border-radius: 6px;
+}
+
+.Title h1 {
+  margin: 0 0 6px 0;
+  color: #222;
+}
+
+.Description {
+  background-color: #8bc8f3;
+  padding: 16px 12px;
+  text-align: center;
+  margin-bottom: 16px;
+  border-radius: 6px;
+}
+
+/* 설명 본문 */
+.Description p {
+  font-size: 1rem;
+  color: #222;
+  margin: 4px 0;
+  line-height: 1.5;
+}
+
+/* 출처 텍스트 */
+.Description p.copyright {
+  font-size: 0.85rem;
+  color: #444;
+  margin-top: 12px;
+  font-style: italic;
+}
+
+/* 🌙 다크 모드 전환 */
+body.dark-mode .Title {
+  background-color: #1f2d3d;
+}
+
+body.dark-mode .Title h1 {
+  color: #90caf9;
+}
+
+body.dark-mode .Description {
+  background-color: #252c34;
+}
+
+body.dark-mode .Description p {
+  color: #ccc;
+}
+
+body.dark-mode .Description p.copyright {
+  color: #aaa;
+}

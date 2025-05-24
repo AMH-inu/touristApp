@@ -1,0 +1,36 @@
+/* 기본 라이트 테마 */
+body {
+  background-color: #e5eff9;
+  color: #000000;
+}
+
+/* 다크 테마용 클래스 */
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* 토글 버튼 (라이트 모드드) */
+.theme-toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 12px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+body.dark-mode .theme-toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 12px;
+  background-color: white;
+  color: #000000;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

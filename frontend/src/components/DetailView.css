@@ -1,0 +1,131 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 컨테이너 스타일 */
+.detail-container {
+  background-color: #dfe9ea;
+  padding: 24px;
+  width: 100%;
+  max-width: none;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: sans-serif;
+  overflow-x: hidden; /* 혹시 모를 넘침 방지 */
+}
+
+/* 이미지 + 지도 병렬 영역 */
+.detail-content-wrapper {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* 이미지와 지도 각각 */
+.detail-image,
+.detail-map {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 400px;
+}
+
+/* 이미지 스타일 */
+.detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* 지도 영역 */
+.detail-map {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+/* 텍스트 및 버튼 */
+.detail-back-button {
+  margin-bottom: 16px;
+  padding: 6px 12px;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #000;
+}
+
+.detail-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.detail-address {
+  font-size: 17px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.detail-homepage {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.detail-overview {
+  line-height: 1.6;
+  color: #333;
+}
+
+.detail-weather {
+  background-color: #8ec7cd;  /* 기존 배경 색상 */
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin: 8px 0;
+  color: #333;
+  font-family: sans-serif;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.detail-weather h2 {
+  margin: 0 0 12px 0; 
+  font-size: 1.2rem;
+}
+
+.detail-weather p {
+  margin: 4px 0;
+  line-height: 1.5;
+}
+
+/* 🌙 다크 모드 스타일 */
+body.dark-mode .detail-container {
+  background-color: #1e1e1e;
+  color: #eee;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .detail-back-button {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  color: #eee;
+}
+
+body.dark-mode .detail-address,
+body.dark-mode .detail-overview {
+  color: #ccc;
+}
+
+body.dark-mode .detail-map {
+  border-color: #444;
+}
+
+body.dark-mode .detail-weather {
+  background-color: #444;    /* 다크 모드 배경 */
+  color: #f0f0f0;           /* 다크 모드 텍스트 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 그림자 강조 */
+}
