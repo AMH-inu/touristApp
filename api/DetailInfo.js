@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   };
 
   try {
-    const response = await axios.get(BASE_URL, { params, headers: { "User-Agent": "Mozilla/5.0" } });
+    const response = await axios.get(BASE_URL, { params });
     const item = response?.data?.response?.body?.items?.item?.[0];
     
     if (!item) {

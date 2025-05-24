@@ -1,5 +1,3 @@
-import axios from "axios"; // axios를 사용하여 API 호출하기 위한 라이브러리 import
-
 export default async function handler(req, res) {
   const { areaCode } = req.query;
 
@@ -11,28 +9,32 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Internal Server Error (SERVICE_KEY)" });
   }
 
-  const params = {
-    numOfRows: 30,
-    pageNo: 1,
+  // ✅ 요청 파라미터를 URLSearchParams로 구성
+  const params = new URLSearchParams({
+    numOfRows: "30",
+    pageNo: "1",
     MobileOS: "ETC",
     MobileApp: "TouristApp",
     _type: "json",
     ServiceKey: SERVICE_KEY,
-  };
+  });
 
-  // ✅ areaCode가 있으면 추가, 없으면 areaCode 없이 요청
+  // ✅ areaCode가 있으면 추가
   if (areaCode) {
-    params.areaCode = areaCode;
+    params.append("areaCode", areaCode);
   }
 
   const tryFetch = async () => {
-    const response = await axios.get(BASE_URL, { params, headers: { "User-Agent": "Mozilla/5.0" } });
-    return response.data?.response?.body?.items?.item || [];
+    const response = await fetch(`${BASE_URL}?${params}`);
+    if (!response.ok) throw new Error(`API 요청 실패: ${response.status}`);
+    const data = await response.json();
+    return data?.response?.body?.items?.item || [];
   };
 
   try {
     let results = await tryFetch();
     let i = 0;
+
     while (i < 7 && results.length === 0) {
       console.log("❗ 결과가 없습니다. 재시도 중...", i + 1);
       await new Promise((r) => setTimeout(r, 300));
@@ -45,7 +47,6 @@ export default async function handler(req, res) {
     console.error("❌ API 요청 실패:", {
       message: error.message,
       code: error.code,
-      responseData: error.response?.data,
     });
     res.status(500).json({ error: "API 요청 실패" });
   }
