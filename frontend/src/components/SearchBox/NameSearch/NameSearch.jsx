@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SearchResult from "../SearchResult"; // 검색 결과 컴포넌트 import
 import { fetchTouristPlaces } from "../../fetch"; // 지역별 관광지 검색 API 호출 함수 import
 import "./NameSearch.css"; // CSS 스타일 import
@@ -12,7 +12,7 @@ const NameSearch = ({ history, setHistory,
                       favorites, onSelectPlace, 
                       toggleFavorite, page, setPage }) => {
 
-  let isFirstRender = 0; // 첫 렌더링 여부를 확인하기 위한 변수
+  const isFirstRender = useRef(true); // 첫 렌더링 여부를 확인하기 위한 변수
 
   // useState Hook
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
@@ -49,11 +49,11 @@ const NameSearch = ({ history, setHistory,
 
   // useEffect 2) 검색어가 바뀔 때마다 페이지를 1로 초기화하는 함수
   useEffect(() => {
-      if (isFirstRender < 1) {  // 첫 렌더링(처음 불러오는 경우) 때는 실행 X
-        isFirstRender++;
-      } else {
+    if (isFirstRender.current) { // 첫 렌더링 이후로 false로 전환 / 첫 렌더링 이전에는 실행하지 않음
+      isFirstRender.current = false;
+    } else {
         setPage(1); // 페이지를 1로 세팅 
-      }
+    }
   }, [keyword]);
 
   // useEffect 3) 페이지가 바뀔 경우 현재 검색어의 변경된 페이지 결과를 새롭게 가져오는 함수
