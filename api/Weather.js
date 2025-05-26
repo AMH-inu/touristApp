@@ -1,3 +1,4 @@
+// TourAPI에서의 위도와 경도를 기상청 API에 필요한 파라미터로 변환하는 함수 
 function convertToGrid(lat, lon) {
   const RE = 6371.00877;
   const GRID = 5.0;
@@ -28,6 +29,7 @@ function convertToGrid(lat, lon) {
   return { nx: x, ny: y };
 }
 
+// 현재 시간을 기준으로 기상청 API의 base_date와 base_time을 결정하는 함수
 function getBaseDateTime() {
   const now = new Date();
   const baseTimes = ["0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300"];

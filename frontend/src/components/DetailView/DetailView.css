@@ -24,7 +24,7 @@
   margin-bottom: 16px;
 }
 
-/* 이미지와 지도 각각 */
+/* 이미지와 지도 각각 스타일 지정 */
 .detail-image,
 .detail-map {
   flex: 1 1 0;
@@ -58,31 +58,36 @@
   color: #000;
 }
 
+/* 관광지 이름 */
 .detail-title {
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 8px;
 }
 
+/* 관광지 주소 */
 .detail-address {
   font-size: 17px;
   color: #333;
   margin-bottom: 8px;
 }
 
+/* 관광지 정보 홈페이지 (API에서 제공) */
 .detail-homepage {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 12px;
 }
 
+/* 관광지 상세 정보 */
 .detail-overview {
   line-height: 1.6;
   color: #333;
 }
 
+/* 관광지의 날씨 정보 컨테이너 */
 .detail-weather {
-  background-color: #8ec7cd;  /* 기존 배경 색상 */
+  background-color: #8ec7cd;
   border-radius: 12px;
   padding: 8px 16px;
   margin: 8px 0;
@@ -92,17 +97,19 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
+/* 관광지의 날씨 정보 제목 */
 .detail-weather h2 {
   margin: 0 0 12px 0; 
   font-size: 1.2rem;
 }
 
+/* 관광지의 날씨 정보 내용 */
 .detail-weather p {
   margin: 4px 0;
   line-height: 1.5;
 }
 
-/* 🌙 다크 모드 스타일 */
+/* 🌙 다크 모드에 대응되는 스타일 지정 */
 body.dark-mode .detail-container {
   background-color: #1e1e1e;
   color: #eee;

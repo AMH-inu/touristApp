@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-import {fetchPlaceDetail, fetchWeather, fetchKakaoMap} from "./fetch"; // 지역별 관광지 검색 API 호출 함수 import
-import "./DetailView.css"; // 스타일은 따로 분리
+import {fetchPlaceDetail, fetchWeather, fetchKakaoMap} from "../fetch"; // 지역별 관광지 검색 API 호출 함수 import
+import "./DetailView.css"; // 스타일 분리
 
 const DetailView = ({ place, onBack }) => {
   const [weather, setWeather] = useState(null); // 현재 날씨 정보를 위한 상태
   const [weather2, setWeather2] = useState(null); // 내일 날씨 예보를 위한 상태
-  const [detail, setDetail] = useState(null);
+  const [detail, setDetail] = useState(null); // 선택된 관광지의 상세 정보를 저장하기 위한 상태
 
-  const [isSdkLoaded, setIsSdkLoaded] = useState(false);
-  const mapRef = useRef(null);
+  const [isSdkLoaded, setIsSdkLoaded] = useState(false); // 카카오 SDK가 로드되었는지 여부를 저장하는 상태
+  const mapRef = useRef(null); // 카카오 맵을 렌더링할 div 요소를 참조하기 위한 useRef Hook
 
-  // ✅ Kakao SDK 동적 로드
+  // Kakao SDK 동적 로드 (무조건 실행)
   useEffect(() => {
     fetchKakaoMap(() => setIsSdkLoaded(true));
   }, []);
 
-  // 관광지의 현재 날씨 정보를 불러옴
+  // 관광지가 선택되면 관광지의 현재 날씨 정보를 불러옴
   useEffect(() => {
     if (detail?.mapy && detail?.mapx) {
     const getWeather = async () => {
@@ -24,10 +24,12 @@ const DetailView = ({ place, onBack }) => {
     };
 
     getWeather();
-  }
+    } else {
+      console.warn("❗ 현재 실시간 날씨 정보를 못 받음"); // 예외 처리
+    }
   }, [detail]);
 
-  // 관광지의 내일 날씨 정보를 불러옴
+  // 관광지가 선택되면 관광지의 내일 날씨 정보를 불러옴
   useEffect(() => {
     if (detail?.mapy && detail?.mapx) {
     const getTomorrowWeather = async () => {
@@ -36,18 +38,17 @@ const DetailView = ({ place, onBack }) => {
     };
 
     getTomorrowWeather();
-  }
+  } else {
+      console.warn("❗ 내일일 날씨 정보를 못 받음"); // 예외 처리
+    }
   }, [detail]);
 
+  // 관광지가 선택되거나 SDK가 로드되면 관광지의 카카오 맵 정보를 불러옴
   useEffect(() => {
-  console.log("weather가 업데이트 됨:", weather);
-  console.log("weather2가 업데이트 됨:", weather2);
-  }, [weather, weather2]);
-
-  // 관광지의 지도 정보를 불러옴
-  useEffect(() => {
+    // 위도와 경도 반영
     const lat = detail?.mapy;
     const lon = detail?.mapx;
+
     if (isSdkLoaded && lat && lon && mapRef.current) {
       const container = mapRef.current;
       const options = {
@@ -66,11 +67,11 @@ const DetailView = ({ place, onBack }) => {
   useEffect(() => {
     if (place?.contentid) {
       const fetchDetail = async () => {
-        const result = await fetchPlaceDetail(place.contentid);
+        const result = await fetchPlaceDetail(place.contentid); // 장소의 ID를 기반으로 상세 정보에 접근
         if (result) {
           setDetail(result);
         } else {
-          console.warn("❗ 관광지 상세 정보를 못 받음");
+          console.warn("❗ 관광지 상세 정보를 못 받음"); // 예외 처리
        }
       };
 

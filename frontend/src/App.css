@@ -10,7 +10,7 @@ body.dark-mode {
   color: #ffffff;
 }
 
-/* 토글 버튼 (라이트 모드드) */
+/* 토글 버튼 (라이트 모드 -> 다크 모드) */
 .theme-toggle-btn {
   position: absolute;
   top: 20px;
@@ -23,6 +23,7 @@ body.dark-mode {
   cursor: pointer;
 }
 
+/* 토글 버튼 (다크 모드 -> 라이트 모드) */
 body.dark-mode .theme-toggle-btn {
   position: absolute;
   top: 20px;

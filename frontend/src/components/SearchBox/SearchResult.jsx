@@ -1,5 +1,11 @@
 import "./SearchResult.css";
 
+// results : 검색 결과를 저장하는 배열
+// favorites : 즐겨찾기 목록을 저장하는 배열
+// onSelectPlace : 선택된 관광지를 변경하는 함수
+// toggleFavorite : 즐겨찾기 상태를 제공하는 함수
+
+// 검색 결과를 보여주는 컴포넌트
 const SearchResult = ({ results, favorites, onSelectPlace, toggleFavorite }) => {
   return (
     <ul className="search-result-list">

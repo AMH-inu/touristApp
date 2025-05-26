@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from "react";
-import NameSearch from "./NameSearch";
-import RegionSearch from "./RegionSearch";
-import FavoriteList from "./FavoriteList";
+import NameSearch from "./NameSearch/NameSearch";
+import RegionSearch from "./RegionSearch/RegionSearch";
+import FavoriteList from "./FavoriteList/FavoriteList";
 import "./SearchBox.css"; // 스타일 파일
 
 const SearchBox = ({ onSelectPlace }) => {
-  // 각각의 탭에서의 검색어와 결과, 즐겨찾기를 관리하기 위한 useState Hook
-  // nameSearch와 regionSearch 각각의 상태를 관리
+  // usestate Hook을 사용하여 각각의 상태를 통합 관리 (부모 컴포넌트에서의 관리)
+  // 다른 컴포넌트로 이동하여도 각각의 컴포넌트 검색 결과가 유지되도록 구현함 
+
+  // 1. NameSearch 컴포넌트에서 사용될 상태 (최근 검색어 기록, 현재 검색어, 검색 결과, 현재 페이지)
   const [history, setHistory] = useState([]);
   const [keyword, setKeyword] = useState("");
+  const [NameResults, setNameResults] = useState([]);
+  const [page1, setPage1] = useState(1);
+
+  // 2. RegionSearch 컴포넌트에서 사용될 상태 (선택된 시도, 선택된 시군구, 검색 결과, 현재 페이지)
   const [selectedSido, setSelectedSido] = useState("");
   const [selectedSigungu, setSelectedSigungu] = useState("");
-  const [NameResults, setNameResults] = useState([]);
   const [RegionResults, setRegionResults] = useState([]);
-  const [page1, setPage1] = useState(1); // ✅ 현재 페이지
-  const [page2, setPage2] = useState(1); // ✅ 현재 페이지
+  const [page2, setPage2] = useState(1);
 
+  // 3. 현재 활성화되어 있는 검색 메뉴명을 관리하는 상태
   const [activeTab, setActiveTab] = useState("name");
+
+  // 4. 즐겨찾기 상태를 관리하는 useState (매 실행 시마다 로컬 스트리지에서 불러옴)
   const [favorites, setFavorites] = useState(() => {
     return JSON.parse(localStorage.getItem("tour_favorites")) || [];
   });
 
-  // 즐겨찾기 상태를 로컬 스토리지에서 불러오기
+  // useEffect 1) 즐겨찾기 상태를 로컬 스토리지에서 불러오는 함수 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("tour_favorites");
@@ -34,12 +41,13 @@ const SearchBox = ({ onSelectPlace }) => {
     } // 예외 처리
   }, []);
 
-  // 즐겨찾기 상태를 로컬 스토리지에 저장하기
+  // useEffect 2) 즐겨찾기 상태를 로컬 스토리지에 저장하는 함수수
   useEffect(() => {
     localStorage.setItem("tour_favorites", JSON.stringify(favorites));
     }, [favorites]);
 
-  // 즐겨찾기 토글
+
+  // 즐겨찾기 토글 (토글을 클릭하면 즐겨찾기에 추가되거나 제거됨)
   const toggleFavorite = (place) => {
     setFavorites((prev) => {
      const exists = prev.find((p) => p.contentid === place.contentid);

@@ -5,7 +5,7 @@ const Title = () => {
   return (
     <div>
     <div className="Title">
-      <h1>📌 한국의 관광지를 찾아서 </h1>
+      <h1>📌 우리의 관광지를 찾아서 </h1>
     </div>
     <div className="Description">
       <p>대한민국 곳곳에 숨어 있는 우리 주변의 관광지를 찾아보세요.</p>
