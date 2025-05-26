@@ -3,6 +3,7 @@ import SearchResult from "../SearchResult"; // 검색 결과 컴포넌트 import
 import {fetchAreaSearch, fetchRegionLists} from "../../fetch"; // 지역별 관광지 검색 API 호출 함수 import
 import "./RegionSearch.css"; // CSS 스타일 import
 
+// 지역별로 검색 기능을 제공하는 컴포넌트
 const RegionSearch = ({ selectedSido, setSelectedSido, 
                         selectedSigungu, setSelectedSigungu, 
                         results, setResults, 

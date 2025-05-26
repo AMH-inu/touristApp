@@ -5,6 +5,7 @@ import "./NameSearch.css"; // CSS 스타일 import
 
 const MAX_SEARCH_HISTORY = 10; // 최근 검색어 기록 최대 개수
 
+// 이름으로 검색 기능을 제공하는 컴포넌트
 const NameSearch = ({ history, setHistory, 
                       keyword, setKeyword, 
                       results, setResults, 
