@@ -60,8 +60,11 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   // useEffect 2) (시도가 선택되면) 시도에 따른 시군구 목록(sigunguList)을 가져오는 함수 
   useEffect(() => {
   if (!selectedSido) return;
-  setSelectedSigungu(""); // 시도가 선택되면 시군구를 초기화
-  setResults([]); // 검색 결과 초기화
+  if (!isFirstRender.current) // 첫 렌더링이 아닌 경우 
+  { setSelectedSigungu(""); 
+    setResults([]);
+  }  // 시도가 선택되면 시군구를 초기화 & 검색 결과 초기화
+
 
   const fetchSigunguList = async () => {
     try {
