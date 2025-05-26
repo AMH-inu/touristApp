@@ -18,6 +18,31 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   const [hasSearched, setHasSearched] = useState(false); // 검색 버튼을 눌렀는지 여부 관리 
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 관리 
 
+  // 선택한 지역에 해당하는 검색 결과를 가져오는 함수
+  const handleSearch = async () => {
+    if (!selectedSido && !selectedSigungu) {
+      return;
+    }
+
+    setLoading(true);  // 로딩 중으로 변경 
+    setHasSearched(true); // 검색 버튼을 눌렀음을 표시
+
+    try {
+      const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
+      setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
+
+      if (data.totalcount === 0) {
+        alert("검색 결과가 없습니다.");
+      } else {
+        setResults(data.items);
+      }
+    } catch (error) { // 에러가 발생하는 경우 예외 처리
+      console.error("❌ 검색 중 오류:", error);
+    } finally {
+      setLoading(false); // 검색이 끝날 경우 로딩 상태는 무조건 해제
+    }
+  };
+
   // useEffect 1) 시도 목록(sidoList)을 가져오는 함수 
   useEffect(() => {
   const fetchSidoList = async () => {
@@ -59,31 +84,6 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
       setPage(1);
     }
   }, [selectedSido, selectedSigungu]);
-
-  // 선택한 지역에 해당하는 검색 결과를 가져오는 함수
-  const handleSearch = async () => {
-    if (!selectedSido && !selectedSigungu) {
-      return;
-    }
-
-    setLoading(true);  // 로딩 중으로 변경 
-    setHasSearched(true); // 검색 버튼을 눌렀음을 표시
-
-    try {
-      const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
-      setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
-
-      if (data.totalcount === 0) {
-        alert("검색 결과가 없습니다.");
-      } else {
-        setResults(data.items);
-      }
-    } catch (error) { // 에러가 발생하는 경우 예외 처리
-      console.error("❌ 검색 중 오류:", error);
-    } finally {
-      setLoading(false); // 검색이 끝날 경우 로딩 상태는 무조건 해제
-    }
-  };
 
   // 페이지를 변경하는 경우
   const handlePageChange = (newPage) => {
