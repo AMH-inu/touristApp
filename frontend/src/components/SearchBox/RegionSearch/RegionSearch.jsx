@@ -61,6 +61,7 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   useEffect(() => {
   if (!selectedSido) return;
   setSelectedSigungu(""); // 시도가 선택되면 시군구를 초기화
+  setResults([]); // 검색 결과 초기화
 
   const fetchSigunguList = async () => {
     try {
