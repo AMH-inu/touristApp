@@ -37,3 +37,8 @@
   border: 1px solid #ccc;
   margin: 20px 0;
 }
+
+/* 좌우 화살표 버튼 (다크 모드 대응) */
+body.dark-mode .pagination-arrow {
+  color: #ffffff;
+}
