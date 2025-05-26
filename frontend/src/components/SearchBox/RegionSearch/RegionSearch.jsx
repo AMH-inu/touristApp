@@ -21,7 +21,7 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 
   // 선택한 지역에 해당하는 검색 결과를 가져오는 함수
   const handleSearch = async () => {
-    if (!selectedSido && !selectedSigungu) {
+    if (!selectedSido || !selectedSigungu) {
       return;
     }
 
