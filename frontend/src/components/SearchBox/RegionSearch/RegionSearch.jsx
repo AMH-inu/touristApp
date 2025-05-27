@@ -38,7 +38,7 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   // useEffect 2) (시도가 선택되면) 시도에 따른 시군구 목록(sigunguList)을 가져오는 함수 
   useEffect(() => {
   if (!selectedSido) return;
-  
+
   // isFirstMount를 사용하여 첫 렌더링 시에는 시군구를 초기화하지 않도록 함
   if (isFirstMount.current) {
     isFirstMount.current = false; 
@@ -66,7 +66,7 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 
   // 기능별 함수 정의
   // 1. 선택한 지역(시도 및 시군구) 및 현재 페이지에 해당하는 검색 결과를 가져오는 함수
-  const handleSearch = async (page = page) => {
+  const handleSearch = async (page) => {
     if (!selectedSido && !selectedSigungu) {
       return;
     }
@@ -78,7 +78,7 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
       const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
       setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
 
-      if (data.totalcount === 0) {
+      if (data.totalCount === 0) {
         alert("검색 결과가 없습니다.");
       } else {
         setResults(data.items);
