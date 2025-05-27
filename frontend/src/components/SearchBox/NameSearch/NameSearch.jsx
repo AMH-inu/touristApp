@@ -125,7 +125,7 @@ const NameSearch = ({ history, setHistory,
                 <div className="search-history-button">
                   <button
                     className="search-history-term"
-                    onClick={() => handleClickSearch(term, 1)}>
+                    onClick={() => handleClickSearch}>
                     {term}
                   </button>
 
