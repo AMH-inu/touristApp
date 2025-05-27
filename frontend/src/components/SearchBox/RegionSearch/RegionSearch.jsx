@@ -90,8 +90,9 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 
   // 3. 검색 버튼를 마우스로 눌렀을 때 handleSearch를 실행하여 검색을 실행하는 함수
   const handleClickSearch = () => {
-    setPage(1);
-    handleSearch(page);
+    const resetPage = 1;
+    setPage(resetPage);
+    handleSearch(resetPage);
   };
 
   // 4. Enter 키를 눌렀을 때 handleSearch를 실행하여 검색을 실행하는 함수 (시도, 시군구 모두 선택된 경우) 
@@ -99,8 +100,9 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
     if (e.key === "Enter") {
       // 시도와 시군구가 모두 선택된 경우만 검색 실행되도록 함
       if (selectedSido && selectedSigungu) {
-        setPage(1);
-        handleSearch(page);
+        const resetPage = 1;
+        setPage(resetPage);
+        handleSearch(resetPage);
       } else { // 예외 처리
         alert("시도와 시군구를 모두 선택하세요.");
       }
