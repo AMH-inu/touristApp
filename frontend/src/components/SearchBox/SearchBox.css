@@ -27,3 +27,7 @@
 .search-content {
   padding: 1rem;
 }
+
+body.dark-mode .tab:hover {
+  color: #fff;
+}
