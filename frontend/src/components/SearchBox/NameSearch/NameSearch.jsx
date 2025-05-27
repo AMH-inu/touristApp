@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SearchResult from "../SearchResult"; // 검색 결과 컴포넌트 import
 import { fetchTouristPlaces } from "../../fetch"; // 지역별 관광지 검색 API 호출 함수 import
 import "./NameSearch.css"; // CSS 스타일 import
@@ -12,21 +12,18 @@ const NameSearch = ({ history, setHistory,
                       favorites, onSelectPlace, 
                       toggleFavorite, page, setPage }) => {
 
+  const isFirstRender = useRef(true); // 첫 렌더링 여부를 확인하기 위한 변수
+
   // useState Hook
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
-  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 관리
-  const [hasSearched, setHasSearched] = useState(false); // 검색 버튼을 눌렀는지 여부 관리 
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 관리 
 
   // 검색어에 해당하는 검색 결과를 가져오는 함수
   const handleSearch = async (historyParam = keyword) => {
     if (!historyParam.trim()) return; // 검색어가 비어있으면 검색하지 않음
-
-    // 각각의 상태 지정
-    setHasSearched(true);             // 검색이 실제로 실행되었음을 표시
     updateHistory(historyParam);      // 검색어를 기록에 추가
     setKeyword(historyParam);         // 검색어 상태 업데이트
-    setLoading(true);                 // 로딩 중으로 변경
-    setPage(1);                       // 페이지를 1로 초기화
+    setLoading(true);                 // 로딩 중으로 변경 
 
     try {
       const data = await fetchTouristPlaces(historyParam, page); // API 호출하여 검색 결과 가져오기
@@ -50,10 +47,18 @@ const NameSearch = ({ history, setHistory,
     setHistory(saved);
   }, []);
 
-  // useEffect 2) 페이지가 바뀔 경우 현재 검색어의 변경된 페이지 결과를 새롭게 가져오는 함수
+  // useEffect 2) 검색어가 바뀔 때마다 페이지를 1로 초기화하는 함수
+  useEffect(() => {
+    if (isFirstRender.current) { // 첫 렌더링 이후로 false로 전환 / 첫 렌더링 이전에는 실행하지 않음
+      isFirstRender.current = false;
+    } else {
+        setPage(1); // 페이지를 1로 세팅 
+    }
+  }, [keyword]);
+
+  // useEffect 3) 페이지가 바뀔 경우 현재 검색어의 변경된 페이지 결과를 새롭게 가져오는 함수
     useEffect(() => {
     if (keyword) {
-      setPage(page); // 페이지 상태 업데이트
       handleSearch(keyword); // 현재 키워드로 검색
     }
   }, [page]);

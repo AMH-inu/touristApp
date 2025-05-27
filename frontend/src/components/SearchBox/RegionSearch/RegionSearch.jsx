@@ -21,12 +21,12 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 
   // 선택한 지역에 해당하는 검색 결과를 가져오는 함수
   const handleSearch = async () => {
-    if (!selectedSido || !selectedSigungu) { return; } // 시도나 시군구가 선택되지 않은 경우 검색 실행 X
+    if (!selectedSido && !selectedSigungu) {
+      return;
+    }
 
-    // 각각의 상태 지정
-    setLoading(true);       // 로딩 중으로 변경 
-    setHasSearched(true);   // 검색 버튼을 눌렀음을 표시
-    setPage(1);             // 페이지를 1로 초기화
+    setLoading(true);  // 로딩 중으로 변경 
+    setHasSearched(true); // 검색 버튼을 눌렀음을 표시
 
     try {
       const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
@@ -60,11 +60,7 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   // useEffect 2) (시도가 선택되면) 시도에 따른 시군구 목록(sigunguList)을 가져오는 함수 
   useEffect(() => {
   if (!selectedSido) return;
-  if (!isFirstRender.current) // 첫 렌더링이 아닌 경우 
-  { setSelectedSigungu(""); 
-    setResults([]);
-  }  // 시도가 선택되면 시군구를 초기화 & 검색 결과 초기화
-
+  setSelectedSigungu(""); // 시도가 선택되면 시군구를 초기화
 
   const fetchSigunguList = async () => {
     try {
@@ -78,21 +74,18 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 }, [selectedSido]);
 
   // useEffect 3) 페이지가 바뀔 경우 현재 조건의 변경된 페이지 결과를 새롭게 가져오는 함수
-    useEffect(() => {
-    if (selectedSido && selectedSigungu) {
-      setPage(page); // 페이지 상태 업데이트
-      handleSearch(); // 현재 조건으로 검색
-    }
-  }, [page]);
+  useEffect(() => {
+      handleSearch();
+      }, [page]);
 
   // useEffect 4) 선택된 시도나 시군구가 바뀔 경우 페이지를 1로 초기화하는 함수
-  /* useEffect(() => {
+  useEffect(() => {
     if (isFirstRender.current) { // 첫 렌더링 이후로 false로 전환 / 첫 렌더링 이전에는 실행하지 않음
       isFirstRender.current = false;
     } else {
         setPage(1); // 페이지를 1로 세팅 
     }
-  }, [selectedSido, selectedSigungu]); */
+  }, [selectedSido, selectedSigungu]);
 
   // 페이지를 변경하는 경우
   const handlePageChange = (newPage) => {
