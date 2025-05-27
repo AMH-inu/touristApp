@@ -20,7 +20,7 @@ const NameSearch = ({ history, setHistory,
   // 검색어에 해당하는 검색 결과를 가져오는 함수
   const handleSearch = async (historyParam = keyword) => {
     if (!historyParam.trim()) return; // 검색어가 비어있으면 검색하지 않음
-    
+
     // 각각의 상태 지정
     setHasSearched(true);             // 검색이 실제로 실행되었음을 표시
     updateHistory(historyParam);      // 검색어를 기록에 추가
@@ -53,6 +53,7 @@ const NameSearch = ({ history, setHistory,
   // useEffect 2) 페이지가 바뀔 경우 현재 검색어의 변경된 페이지 결과를 새롭게 가져오는 함수
     useEffect(() => {
     if (keyword) {
+      setPage(page); // 페이지 상태 업데이트
       handleSearch(keyword); // 현재 키워드로 검색
     }
   }, [page]);
