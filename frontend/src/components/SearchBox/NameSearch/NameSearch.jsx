@@ -125,7 +125,7 @@ const NameSearch = ({ history, setHistory,
                 <div className="search-history-button">
                   <button
                     className="search-history-term"
-                    onClick={() => handleSearch(term)}>
+                    onClick={() => handleClickSearch(term, 1)}>
                     {term}
                   </button>
 
@@ -181,7 +181,6 @@ const NameSearch = ({ history, setHistory,
       {loading && <p>⏳ 관광지 정보를 불러오는 중입니다...</p>}
       
       {/* 검색 결과 출력 */}
-
       {!loading && results.length === 0 && keyword && (
         <p>❗ 검색 결과가 없습니다.</p>
       )}
