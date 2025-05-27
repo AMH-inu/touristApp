@@ -37,25 +37,25 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 
   // useEffect 2) (시도가 선택되면) 시도에 따른 시군구 목록(sigunguList)을 가져오는 함수 
   useEffect(() => {
-  if (!selectedSido) return;
+    if (!selectedSido) return;
 
-  // isFirstMount를 사용하여 첫 렌더링 시에는 시군구를 초기화하지 않도록 함
-  if (isFirstMount.current) {
-    isFirstMount.current = false; 
-  } else { 
-    setSelectedSigungu("");  
-  }
-
-  const fetchSigunguList = async () => {
-    try {
-      const data = await fetchRegionLists(Number(selectedSido)); // ← ID를 숫자로 변환하여 대입
-      setSigunguList(data);
-    } catch (error) {
-      console.error("시군구 불러오기 실패:", error); // 예외 처리
+    // isFirstMount를 사용하여 첫 렌더링 시에는 시군구를 초기화하지 않도록 함
+    if (isFirstMount.current) {
+      isFirstMount.current = false; 
+    } else { 
+      setSelectedSigungu("");  
     }
-  };
-  fetchSigunguList();
-}, [selectedSido]);
+
+    const fetchSigunguList = async () => {
+      try {
+        const data = await fetchRegionLists(Number(selectedSido)); // ← ID를 숫자로 변환하여 대입
+        setSigunguList(data);
+      } catch (error) {
+        console.error("시군구 불러오기 실패:", error); // 예외 처리
+      }
+    };
+    fetchSigunguList();
+  }, [selectedSido]);
 
   // useEffect 3) 페이지가 바뀔 경우 현재 조건의 변경된 페이지 결과를 새롭게 가져오는 함수
   useEffect(() => {
