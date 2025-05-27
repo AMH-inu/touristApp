@@ -1,5 +1,5 @@
 // import
-import React, { useState, useEffect } from "react"; // React 라이브러리 및 Hook
+import React, { useState, useEffect, useRef } from "react"; // React 라이브러리 및 Hook
 import SearchResult from "../SearchResult"; // 검색 결과 컴포넌트
 import {fetchAreaSearch, fetchRegionLists} from "../../fetch"; // 지역별 관광지 검색 API 호출 함수
 import "./RegionSearch.css"; // CSS 스타일
@@ -18,6 +18,9 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   const [hasSearched, setHasSearched] = useState(false); // 검색 버튼을 눌렀는지 여부 관리 
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 관리 
 
+  // useRef Hook
+  const isFirstMount = useRef(true);
+
   // useEffect Hook
   // useEffect 1) 시도 목록(sidoList)을 가져오는 함수 (첫 렌더링 시 자동 실행)
   useEffect(() => {
@@ -35,7 +38,13 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   // useEffect 2) (시도가 선택되면) 시도에 따른 시군구 목록(sigunguList)을 가져오는 함수 
   useEffect(() => {
   if (!selectedSido) return;
-  setSelectedSigungu(""); // 시도가 선택되면 시군구를 초기화
+  
+  // isFirstMount를 사용하여 첫 렌더링 시에는 시군구를 초기화하지 않도록 함
+  if (isFirstMount.current) {
+    isFirstMount.current = false; 
+  } else { 
+    setSelectedSigungu("");  
+  }
 
   const fetchSigunguList = async () => {
     try {
