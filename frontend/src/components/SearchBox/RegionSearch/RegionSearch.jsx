@@ -62,6 +62,10 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
     if (hasSearched) {
       handleSearch(page);
     }
+
+    if (selectedSido && selectedSigungu) {
+      handleSearch(page);
+    }
   }, [page]);
 
   // 기능별 함수 정의
