@@ -84,7 +84,7 @@ const NameSearch = ({ history, setHistory,
   };
 
   // 6. 검색 버튼를 마우스로 눌렀을 때 handleSearch를 실행하여 검색을 실행하는 함수
-  const handleClickSearch = () => {
+  const handleClickSearch = (keyword) => {
     if (!keyword.trim()) return;
     setPage(1);
     handleSearch(keyword, 1);
@@ -110,7 +110,7 @@ const NameSearch = ({ history, setHistory,
         onKeyDown={handleKeyPress}
         placeholder="검색어를 입력하세요."
       />
-      <button onClick={handleClickSearch} disabled={loading} style={{ marginLeft: "8px" }}>
+      <button onClick={() => handleClickSearch(keyword)} disabled={loading} style={{ marginLeft: "8px" }}>
         {loading ? "검색 중..." : "검색"}
       </button>
 
@@ -125,7 +125,7 @@ const NameSearch = ({ history, setHistory,
                 <div className="search-history-button">
                   <button
                     className="search-history-term"
-                    onClick={() => handleClickSearch}>
+                    onClick={() => handleClickSearch(term)}>
                     {term}
                   </button>
 
