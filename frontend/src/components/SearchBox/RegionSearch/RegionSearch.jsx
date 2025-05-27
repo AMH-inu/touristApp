@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import SearchResult from "../SearchResult"; // 검색 결과 컴포넌트 import
-import {fetchAreaSearch, fetchRegionLists} from "../../fetch"; // 지역별 관광지 검색 API 호출 함수 import
-import "./RegionSearch.css"; // CSS 스타일 import
+// import
+import React, { useState, useEffect } from "react"; // React 라이브러리 및 Hook
+import SearchResult from "../SearchResult"; // 검색 결과 컴포넌트
+import {fetchAreaSearch, fetchRegionLists} from "../../fetch"; // 지역별 관광지 검색 API 호출 함수
+import "./RegionSearch.css"; // CSS 스타일
 
 // 지역별로 검색 기능을 제공하는 컴포넌트
 const RegionSearch = ({ selectedSido, setSelectedSido, 
@@ -10,8 +11,6 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
                         favorites, onSelectPlace, 
                         page, setPage, toggleFavorite }) => {
 
-  const isFirstRender = useRef(true); // 첫 렌더링 여부를 확인하기 위한 변수
-
   // useState Hook
   const [loading, setLoading] = useState(false); // 로딩 상태 관리 
   const [sidoList, setSidoList] = useState([]); // 시도 목록 관리 
@@ -19,32 +18,8 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
   const [hasSearched, setHasSearched] = useState(false); // 검색 버튼을 눌렀는지 여부 관리 
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 관리 
 
-  // 선택한 지역에 해당하는 검색 결과를 가져오는 함수
-  const handleSearch = async () => {
-    if (!selectedSido && !selectedSigungu) {
-      return;
-    }
-
-    setLoading(true);  // 로딩 중으로 변경 
-    setHasSearched(true); // 검색 버튼을 눌렀음을 표시
-
-    try {
-      const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
-      setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
-
-      if (data.totalcount === 0) {
-        alert("검색 결과가 없습니다.");
-      } else {
-        setResults(data.items);
-      }
-    } catch (error) { // 에러가 발생하는 경우 예외 처리
-      console.error("❌ 검색 중 오류:", error);
-    } finally {
-      setLoading(false); // 검색이 끝날 경우 로딩 상태는 무조건 해제
-    }
-  };
-
-  // useEffect 1) 시도 목록(sidoList)을 가져오는 함수 
+  // useEffect Hook
+  // useEffect 1) 시도 목록(sidoList)을 가져오는 함수 (첫 렌더링 시 자동 실행)
   useEffect(() => {
   const fetchSidoList = async () => {
     try {
@@ -75,8 +50,10 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 
   // useEffect 3) 페이지가 바뀔 경우 현재 조건의 변경된 페이지 결과를 새롭게 가져오는 함수
   useEffect(() => {
-      handleSearch();
-      }, [page]);
+    if (hasSearched) {
+      handleSearch(page);
+    }
+  }, [page]);
 
   // useEffect 4) 선택된 시도나 시군구가 바뀔 경우 페이지를 1로 초기화하는 함수
   useEffect(() => {
@@ -87,13 +64,59 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
     }
   }, [selectedSido, selectedSigungu]);
 
-  // 페이지를 변경하는 경우
+  // 기능별 함수 정의
+  // 1. 선택한 지역(시도 및 시군구) 및 현재 페이지에 해당하는 검색 결과를 가져오는 함수
+  const handleSearch = async (page = page) => {
+    if (!selectedSido && !selectedSigungu) {
+      return;
+    }
+
+    setLoading(true);  // 로딩 중으로 변경 
+    setHasSearched(true); // 검색 버튼을 눌렀음을 표시
+
+    try {
+      const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
+      setTotalPages(Math.ceil(data.totalCount / 30)); // 전체 페이지 수 계산 (30개씩 나누기)
+
+      if (data.totalcount === 0) {
+        alert("검색 결과가 없습니다.");
+      } else {
+        setResults(data.items);
+      }
+    } catch (error) { // 에러가 발생하는 경우 예외 처리
+      console.error("❌ 검색 중 오류:", error);
+    } finally {
+      setLoading(false); // 검색이 끝날 경우 로딩 상태는 무조건 해제
+    }
+  };
+
+  // 2. 페이지를 변경하는 경우
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
     }
   };
+
+  // 3. 검색 버튼를 마우스로 눌렀을 때 handleSearch를 실행하여 검색을 실행하는 함수
+  const handleClickSearch = () => {
+    setPage(1);
+    handleSearch(page);
+  };
+
+  // 4. Enter 키를 눌렀을 때 handleSearch를 실행하여 검색을 실행하는 함수 (시도, 시군구 모두 선택된 경우) 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      // 시도와 시군구가 모두 선택된 경우만 검색 실행되도록 함
+      if (selectedSido && selectedSigungu) {
+        setPage(1);
+        handleSearch(page);
+      } else { // 예외 처리
+        alert("시도와 시군구를 모두 선택하세요.");
+      }
+    }
+  };
   
+  // return : 컴포넌트 HTML 렌더링
   return (
     <div>
       <h2>📍 지역별로 검색</h2>
@@ -105,14 +128,15 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
         ))}
       </select>
       &nbsp;
-      <select value={selectedSigungu} onChange={(e) => setSelectedSigungu(e.target.value)} disabled={!sigunguList.length}>
+      <select value={selectedSigungu} onChange={(e) => setSelectedSigungu(e.target.value)} 
+              onKeyDown={handleKeyPress} disabled={!sigunguList.length}>
         <option value="">시/군/구 선택</option>
         {sigunguList.map((sigungu) => (
           <option key={sigungu.code} value={sigungu.code}>{sigungu.name}</option>
         ))}
       </select>
 
-      <button onClick={handleSearch} style={{ marginLeft: "8px" }}>{loading ? "검색 중..." : "검색"}</button>
+      <button onClick={handleClickSearch} style={{ marginLeft: "8px" }}>{loading ? "검색 중..." : "검색"}</button>
 
       {/* 페이지네이션 */}
       <div className="pagination-container">

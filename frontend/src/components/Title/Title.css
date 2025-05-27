@@ -1,3 +1,4 @@
+/* 제목 배경 */
 .Title {
   background-color: #5aaeea;
   padding: 8px 6px;
@@ -6,11 +7,13 @@
   border-radius: 6px;
 }
 
+/* 제목 텍스트 */
 .Title h1 {
   margin: 0 0 6px 0;
   color: #222;
 }
 
+/* 설명 배경 */
 .Description {
   background-color: #8bc8f3;
   padding: 16px 12px;
@@ -35,7 +38,7 @@
   font-style: italic;
 }
 
-/* 🌙 다크 모드 전환 */
+/* 🌙 다크 모드 전환 대응 */
 body.dark-mode .Title {
   background-color: #1f2d3d;
 }

@@ -1,7 +1,10 @@
-import React from "react";
-import "./Title.css"; // 스타일은 따로 분리
+// import
+import "./Title.css"; // CSS 스타일
 
+// 제목 컴포넌트 (화면 상단 위치)
 const Title = () => {
+
+  // return : 컴포넌트 HTML 렌더링 (정적 형태)
   return (
     <div>
     <div className="Title">

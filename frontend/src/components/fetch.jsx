@@ -1,6 +1,8 @@
 import axios from "axios";
 
-// 지역 코드와 시군구 코드를 기반으로 관광지 목록을 가져오는 함수
+// 서버리스 API를 호출하는 각각의 fetch 함수 정의
+
+// 1. 지역 코드와 시군구 코드를 기반으로 관광지 목록을 가져오는 함수
 export const fetchAreaSearch = async (areaCode, sigunguCode, pageNo = 1) => {
   try {
     const response = await axios.get("/api/AreaSearch", {
@@ -13,7 +15,7 @@ export const fetchAreaSearch = async (areaCode, sigunguCode, pageNo = 1) => {
   }
 };
 
-// 관광지 이름을 기반으로 검색하는 함수
+// 2. 관광지 이름을 기반으로 검색하는 함수
 export const fetchTouristPlaces = async (keyword, pageNo = 1) => {
   try {
     const response = await axios.get("/api/NameSearch", {
@@ -27,7 +29,7 @@ export const fetchTouristPlaces = async (keyword, pageNo = 1) => {
   }
 };
 
-// 지역 목록을 가져오는 함수
+// 3. 지역 목록을 가져오는 함수
 export const fetchRegionLists = async (areaCode = "") => {
   try {
     const response = await axios.get("/api/RegionList", {
@@ -41,7 +43,7 @@ export const fetchRegionLists = async (areaCode = "") => {
   }
 };
 
-// ID로 관광지 상세 정보를 가져오는 함수
+// 4. ID로 관광지 상세 정보를 가져오는 함수
 export const fetchPlaceDetail = async (contentId) => {
   try {
     const response = await axios.get("/api/DetailInfo", {
@@ -55,7 +57,7 @@ export const fetchPlaceDetail = async (contentId) => {
   }
 };
 
-// 관광지의 날씨 정보를 가져오는 함수
+// 5. 관광지의 날씨 정보를 가져오는 함수
 export const fetchWeather = async (lat, lon, after = 0) => {
   try {
     const response = await axios.get("/api/Weather", {
@@ -68,7 +70,7 @@ export const fetchWeather = async (lat, lon, after = 0) => {
   }
 };
 
-// 카카오맵 지도를 가져오는 함수
+// 6. 카카오맵 지도를 가져오는 함수
 export const fetchKakaoMap = async (onLoadCallback) => {
   try {
     // 서버리스에서 JavaScript Key 받아오기

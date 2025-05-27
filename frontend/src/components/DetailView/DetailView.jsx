@@ -1,54 +1,59 @@
-import React, { useState, useEffect, useRef } from "react";
-import {fetchPlaceDetail, fetchWeather, fetchKakaoMap} from "../fetch"; // 지역별 관광지 검색 API 호출 함수 import
-import "./DetailView.css"; // 스타일 분리
+// import
+import React, { useState, useEffect, useRef } from "react"; // React 라이브러리 및 Hook
+import {fetchPlaceDetail, fetchWeather, fetchKakaoMap} from "../fetch"; // 지역별 관광지 검색 API 호출 함수
+import "./DetailView.css"; // CSS 스타일
 
+// 관광지 상세 정보를 별도 화면으로 나타내는 컴포넌트
 const DetailView = ({ place, onBack }) => {
-  const [weather, setWeather] = useState(null); // 현재 날씨 정보를 위한 상태
-  const [weather2, setWeather2] = useState(null); // 내일 날씨 예보를 위한 상태
-  const [detail, setDetail] = useState(null); // 선택된 관광지의 상세 정보를 저장하기 위한 상태
 
+  // useState Hook
+  const [weather, setWeather] = useState(null); // 현재 날씨 정보
+  const [weather2, setWeather2] = useState(null); // 내일 날씨 정보
+  const [detail, setDetail] = useState(null); // 선택된 관광지의 상세 정보 (json 형태로 저장)
   const [isSdkLoaded, setIsSdkLoaded] = useState(false); // 카카오 SDK가 로드되었는지 여부를 저장하는 상태
-  const mapRef = useRef(null); // 카카오 맵을 렌더링할 div 요소를 참조하기 위한 useRef Hook
 
-  // Kakao SDK 동적 로드 (무조건 실행)
+  // useRef Hook
+  const mapRef = useRef(null); // 카카오 맵을 렌더링할 div 요소를 참조
+
+  // useEffect Hook
+  // useEffect 1) Kakao SDK 동적 로드 (컴포넌트 실행 시 무조건 자동 실행)
   useEffect(() => {
     fetchKakaoMap(() => setIsSdkLoaded(true));
   }, []);
 
-  // 관광지가 선택되면 관광지의 현재 날씨 정보를 불러옴
+  // useEffect 2) 선택된 관광지의 세부 정보가 바뀌면(관광지 새로 선택 시) 관광지의 현재 날씨 정보를 불러옴
   useEffect(() => {
     if (detail?.mapy && detail?.mapx) {
-    const getWeather = async () => {
+    const getTodayWeather = async () => {
       const data = await fetchWeather(detail.mapy, detail.mapx);
       setWeather(data);
     };
-
-    getWeather();
+    getTodayWeather();
     } else {
       console.warn("❗ 현재 실시간 날씨 정보를 못 받음"); // 예외 처리
     }
   }, [detail]);
 
-  // 관광지가 선택되면 관광지의 내일 날씨 정보를 불러옴
+  // useEffect 3) 선택된 관광지의 세부 정보가 바뀌면(관광지 새로 선택 시) 관광지의 내일 날씨 예보를 불러옴
   useEffect(() => {
     if (detail?.mapy && detail?.mapx) {
     const getTomorrowWeather = async () => {
       const data = await fetchWeather(detail.mapy, detail.mapx, 1);
       setWeather2(data);     
     };
-
     getTomorrowWeather();
   } else {
       console.warn("❗ 내일일 날씨 정보를 못 받음"); // 예외 처리
     }
   }, [detail]);
 
-  // 관광지가 선택되거나 SDK가 로드되면 관광지의 카카오 맵 정보를 불러옴
+  // useEffect 4) 관광지가 새로 선택되거나 SDK가 로드되면 관광지의 카카오 맵 정보를 불러옴
   useEffect(() => {
-    // 위도와 경도 반영
+    // 위도와 경도에 반영
     const lat = detail?.mapy;
     const lon = detail?.mapx;
 
+    // 카카오 맵 SDK가 로드되었고, 위도와 경도가 존재하며, mapRef가 유효한 경우에만 맵을 초기화
     if (isSdkLoaded && lat && lon && mapRef.current) {
       const container = mapRef.current;
       const options = {
@@ -63,7 +68,7 @@ const DetailView = ({ place, onBack }) => {
     }
   }, [isSdkLoaded, detail]);
 
-  // 관광지의 상세 정보를 불러옴
+  // useEffect 5) 관광지의 ID 값 변화(관광지 새로 선택) 시 관광지의 상세 정보를 불러옴
   useEffect(() => {
     if (place?.contentid) {
       const fetchDetail = async () => {
@@ -74,12 +79,14 @@ const DetailView = ({ place, onBack }) => {
           console.warn("❗ 관광지 상세 정보를 못 받음"); // 예외 처리
        }
       };
-
     fetchDetail();
   } else {
     console.warn("❌ place.contentid 없음");
   }
 }, [place?.contentid]);
+
+  // return : 컴포넌트 HTML 렌더링
+  // 만약 place가 없으면(상세 정보를 아직 불러오지 못했으면) 로딩 중 메시지를 표시
 
   if (!place) return <p>⏳ 상세 정보를 불러오는 중입니다...</p>;
 

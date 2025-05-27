@@ -1,10 +1,14 @@
+// Vercel Serverless Function 1. AreaSearch
+// 시도 코드와 시군구 코드를 기반으로 해당하는 관광지의 목록을 가져오는 API 핸들러
 export default async function handler(req, res) {
+  // 쿼리 파라미터 추출 (조건에 따라 변화할 수 있는 파라미터)
   const { areaCode = "", sigunguCode = "", pageNo = 1 } = req.query;
 
+  // API 기본 URL 및 서비스 키(Vercel 등록) 지정
   const BASE_URL = "https://apis.data.go.kr/B551011/KorService2/areaBasedList2";
   const SERVICE_KEY = process.env.SERVICE_KEY;
 
-  // ✅ 요청 파라미터를 URLSearchParams로 구성
+  // 요청 파라미터를 URLSearchParams로 구성
   const params = new URLSearchParams({
     numOfRows: "30",
     pageNo: String(pageNo),
@@ -17,7 +21,8 @@ export default async function handler(req, res) {
     ServiceKey: SERVICE_KEY,
   });
 
-  // 요청 및 재시도 로직
+  // fetch를 활용한 API 요청 함수 (요청 실패 시 재시도 로직 포함)
+  // 응답받은 JSON 데이터 중에서 item 배열과 totalCount 변수 값을 취함
   const tryFetch = async () => {
     const response = await fetch(`${BASE_URL}?${params}`);
     if (!response.ok) throw new Error(`API 요청 실패: ${response.status}`);
@@ -29,6 +34,7 @@ export default async function handler(req, res) {
     return {items, totalCount};
   };
 
+  // API 호출 실패 시 7회까지 반복하여 재시도함
   try {
     let results = await tryFetch();
     let i = 0;

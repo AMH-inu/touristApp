@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import SearchResult from "../SearchResult"; // 검색 결과 컴포넌트 import
-import { fetchTouristPlaces } from "../../fetch"; // 지역별 관광지 검색 API 호출 함수 import
-import "./NameSearch.css"; // CSS 스타일 import
+// import
+import React, { useState, useEffect } from "react"; // React 라이브러리 및 Hook
+import SearchResult from "../SearchResult"; // 검색 결과 컴포넌트
+import { fetchTouristPlaces } from "../../fetch"; // 지역별 관광지 검색 API 호출 함수
+import "./NameSearch.css"; // CSS 스타일
 
 const MAX_SEARCH_HISTORY = 10; // 최근 검색어 기록 최대 개수
 
@@ -12,14 +13,27 @@ const NameSearch = ({ history, setHistory,
                       favorites, onSelectPlace, 
                       toggleFavorite, page, setPage }) => {
 
-  const isFirstRender = useRef(true); // 첫 렌더링 여부를 확인하기 위한 변수
-
   // useState Hook
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 관리 
 
-  // 검색어에 해당하는 검색 결과를 가져오는 함수
-  const handleSearch = async (historyParam = keyword) => {
+  // useEffect Hook
+  // useEffect 1) 최근 검색어 정보를 로컬 스토리지로부터 불러오는 함수 (첫 렌더링 시 자동 실행)
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+    setHistory(saved);
+  }, []);
+
+  // useEffect 2) 페이지가 바뀔 경우 현재 검색어의 변경된 페이지 결과를 새롭게 가져오는 함수
+    useEffect(() => {
+    if (keyword) {
+      handleSearch(keyword, page); // 현재 키워드로 검색
+    }
+  }, [page]);
+
+  // 기능별 함수 정의
+  // 1. 검색어, 현재 페이지에 해당하는 검색 결과를 가져오는 함수
+  const handleSearch = async (historyParam = keyword, page = page) => {
     if (!historyParam.trim()) return; // 검색어가 비어있으면 검색하지 않음
     updateHistory(historyParam);      // 검색어를 기록에 추가
     setKeyword(historyParam);         // 검색어 상태 업데이트
@@ -41,29 +55,7 @@ const NameSearch = ({ history, setHistory,
     }
   };
 
-  // useEffect 1) 최근 검색어 정보를 로컬 스토리지로부터 불러오는 함수
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-    setHistory(saved);
-  }, []);
-
-  // useEffect 2) 검색어가 바뀔 때마다 페이지를 1로 초기화하는 함수
-  useEffect(() => {
-    if (isFirstRender.current) { // 첫 렌더링 이후로 false로 전환 / 첫 렌더링 이전에는 실행하지 않음
-      isFirstRender.current = false;
-    } else {
-        setPage(1); // 페이지를 1로 세팅 
-    }
-  }, [keyword]);
-
-  // useEffect 3) 페이지가 바뀔 경우 현재 검색어의 변경된 페이지 결과를 새롭게 가져오는 함수
-    useEffect(() => {
-    if (keyword) {
-      handleSearch(keyword); // 현재 키워드로 검색
-    }
-  }, [page]);
-
-  // 검색어 기록을 업데이트함 (새로운 검색어를 추가하고, 최대 개수를 초과하면 가장 오래된 검색어부터 제거)
+  // 2. 검색어 기록을 업데이트함 (새로운 검색어를 추가하고, 최대 개수를 초과하면 가장 오래된 검색어부터 제거)
   const updateHistory = (newKeyword) => {
     let updated = [newKeyword, ...history.filter(k => k !== newKeyword)];
     if (updated.length > MAX_SEARCH_HISTORY) updated = updated.slice(0, MAX_SEARCH_HISTORY);
@@ -71,31 +63,43 @@ const NameSearch = ({ history, setHistory,
     localStorage.setItem("searchHistory", JSON.stringify(updated));
   };
 
-  // 특정 검색어 삭제
+  // 3. 특정 검색어 삭제
   const removeKeyword = (termToRemove) => {
     const updated = history.filter((term) => term !== termToRemove);
     setHistory(updated);
     localStorage.setItem("searchHistory", JSON.stringify(updated));
   };
 
-  // 전체 검색어 초기화
+  // 4. 전체 검색어 초기화
   const clearHistory = () => {
     setHistory([]);
     localStorage.removeItem("searchHistory");
   };
 
-  // 페이지를 변경하는 경우
+  // 5. 페이지를 변경하는 경우
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
     }
   };
 
-  // Enter 키를 눌렀을 때 handleSearch를 실행하여 검색을 실행하는 함수
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") handleSearch();
+  // 6. 검색 버튼를 마우스로 눌렀을 때 handleSearch를 실행하여 검색을 실행하는 함수
+  const handleClickSearch = () => {
+    if (!keyword.trim()) return;
+    setPage(1);
+    handleSearch(keyword, 1);
   };
 
+  // 7. Enter 키를 눌렀을 때 handleSearch를 실행하여 검색을 실행하는 함수
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      if (!keyword.trim()) return;
+      setPage(1);
+      handleSearch(keyword, 1);
+    }
+  };
+
+  // return : 컴포넌트 HTML 렌더링
   return (
     <div>
       <h2>🔎 이름으로 검색 </h2>
@@ -106,7 +110,7 @@ const NameSearch = ({ history, setHistory,
         onKeyDown={handleKeyPress}
         placeholder="검색어를 입력하세요."
       />
-      <button onClick={handleSearch} disabled={loading} style={{ marginLeft: "8px" }}>
+      <button onClick={handleClickSearch} disabled={loading} style={{ marginLeft: "8px" }}>
         {loading ? "검색 중..." : "검색"}
       </button>
 
