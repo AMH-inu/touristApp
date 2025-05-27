@@ -59,10 +59,6 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 
   // useEffect 3) 페이지가 바뀔 경우 현재 조건의 변경된 페이지 결과를 새롭게 가져오는 함수
   useEffect(() => {
-    if (hasSearched) {
-      handleSearch(page);
-    }
-
     if (selectedSido && selectedSigungu) {
       handleSearch(page);
     }
