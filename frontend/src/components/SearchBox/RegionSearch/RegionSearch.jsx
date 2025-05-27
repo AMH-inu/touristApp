@@ -21,12 +21,12 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
 
   // 선택한 지역에 해당하는 검색 결과를 가져오는 함수
   const handleSearch = async () => {
-    if (!selectedSido || !selectedSigungu) {
-      return;
-    }
+    if (!selectedSido || !selectedSigungu) { return; } // 시도나 시군구가 선택되지 않은 경우 검색 실행 X
 
-    setLoading(true);  // 로딩 중으로 변경 
-    setHasSearched(true); // 검색 버튼을 눌렀음을 표시
+    // 각각의 상태 지정
+    setLoading(true);       // 로딩 중으로 변경 
+    setHasSearched(true);   // 검색 버튼을 눌렀음을 표시
+    setPage(1);             // 페이지를 1로 초기화
 
     try {
       const data = await fetchAreaSearch(selectedSido, selectedSigungu, page);
@@ -83,13 +83,13 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
       }, [page]);
 
   // useEffect 4) 선택된 시도나 시군구가 바뀔 경우 페이지를 1로 초기화하는 함수
-  useEffect(() => {
+  /* useEffect(() => {
     if (isFirstRender.current) { // 첫 렌더링 이후로 false로 전환 / 첫 렌더링 이전에는 실행하지 않음
       isFirstRender.current = false;
     } else {
         setPage(1); // 페이지를 1로 세팅 
     }
-  }, [selectedSido, selectedSigungu]);
+  }, [selectedSido, selectedSigungu]); */
 
   // 페이지를 변경하는 경우
   const handlePageChange = (newPage) => {
