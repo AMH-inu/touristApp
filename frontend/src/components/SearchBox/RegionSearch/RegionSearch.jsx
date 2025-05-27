@@ -55,15 +55,6 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
     }
   }, [page]);
 
-  // useEffect 4) 선택된 시도나 시군구가 바뀔 경우 페이지를 1로 초기화하는 함수
-  useEffect(() => {
-    if (isFirstRender.current) { // 첫 렌더링 이후로 false로 전환 / 첫 렌더링 이전에는 실행하지 않음
-      isFirstRender.current = false;
-    } else {
-        setPage(1); // 페이지를 1로 세팅 
-    }
-  }, [selectedSido, selectedSigungu]);
-
   // 기능별 함수 정의
   // 1. 선택한 지역(시도 및 시군구) 및 현재 페이지에 해당하는 검색 결과를 가져오는 함수
   const handleSearch = async (page = page) => {
