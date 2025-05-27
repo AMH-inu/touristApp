@@ -15,17 +15,19 @@ const SearchBox = ({ onSelectPlace }) => {
   // useState 1) 현재 활성화되어 있는 검색 메뉴명을 관리하는 상태
   const [activeTab, setActiveTab] = useState("name");
 
-  // useState 2) NameSearch 컴포넌트에서 사용될 useState Hook (최근 검색어 기록, 현재 검색어, 검색 결과, 현재 페이지)
+  // useState 2) NameSearch 컴포넌트에서 사용될 useState Hook (최근 검색어 기록, 현재 검색어, 검색 결과, 현재 페이지, 전체 페이지지)
   const [history, setHistory] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [NameResults, setNameResults] = useState([]);
   const [page1, setPage1] = useState(1);
+  const [totalPages1, setTotalPages1] = useState(1);
 
   // useState 3) RegionSearch 컴포넌트에서 사용될 상태 (선택된 시도, 선택된 시군구, 검색 결과, 현재 페이지)
   const [selectedSido, setSelectedSido] = useState("");
   const [selectedSigungu, setSelectedSigungu] = useState("");
   const [RegionResults, setRegionResults] = useState([]);
   const [page2, setPage2] = useState(1);
+  const [totalPages2, setTotalPages2] = useState(1);
 
   // useState 4) 즐겨찾기 목록을 관리하는 useState (매 실행 시마다 로컬 스토리지에서 자동으로 불러옴)
   const [favorites, setFavorites] = useState(() => {
@@ -100,7 +102,9 @@ const SearchBox = ({ onSelectPlace }) => {
           onSelectPlace={onSelectPlace}
           toggleFavorite={toggleFavorite}
           page={page1}
-          setPage={setPage1} />}
+          setPage={setPage1}
+          totalPages={totalPages1}
+          setTotalPages={setTotalPages1} />}
 
         {activeTab === "region" && <RegionSearch 
           selectedSido={selectedSido}
@@ -113,7 +117,9 @@ const SearchBox = ({ onSelectPlace }) => {
           onSelectPlace={onSelectPlace}
           toggleFavorite={toggleFavorite} 
           page={page2}
-          setPage={setPage2} />}
+          setPage={setPage2}
+          totalPages={totalPages2}
+          setTotalPages={setTotalPages2} />}
 
         {activeTab === "favorite" && <FavoriteList
           favorites={favorites}

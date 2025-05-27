@@ -9,14 +9,14 @@ const RegionSearch = ({ selectedSido, setSelectedSido,
                         selectedSigungu, setSelectedSigungu, 
                         results, setResults, 
                         favorites, onSelectPlace, 
-                        page, setPage, toggleFavorite }) => {
+                        page, setPage, toggleFavorite,
+                        totalPages, setTotalPages }) => {
 
   // useState Hook
   const [loading, setLoading] = useState(false); // 로딩 상태 관리 
   const [sidoList, setSidoList] = useState([]); // 시도 목록 관리 
   const [sigunguList, setSigunguList] = useState([]); // 시군구 목록 관리 
   const [hasSearched, setHasSearched] = useState(false); // 검색 버튼을 눌렀는지 여부 관리 
-  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 관리 
 
   // useRef Hook
   const isFirstMount = useRef(true);

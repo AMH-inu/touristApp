@@ -11,11 +11,11 @@ const NameSearch = ({ history, setHistory,
                       keyword, setKeyword, 
                       results, setResults, 
                       favorites, onSelectPlace, 
-                      toggleFavorite, page, setPage }) => {
+                      toggleFavorite, page, setPage, 
+                      totalPages, setTotalPages }) => {
 
   // useState Hook
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
-  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 관리 
 
   // useEffect Hook
   // useEffect 1) 최근 검색어 정보를 로컬 스토리지로부터 불러오는 함수 (첫 렌더링 시 자동 실행)
